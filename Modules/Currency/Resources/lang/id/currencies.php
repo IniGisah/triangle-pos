@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'home' => 'Beranda',
+    'index_title' => 'Mata Uang',
+    'breadcrumb_index' => 'Mata Uang',
+    'breadcrumb_add' => 'Tambah',
+    'breadcrumb_edit' => 'Ubah',
+    'create_title' => 'Buat Mata Uang',
+    'edit_title' => 'Ubah Mata Uang',
+    'add_button' => 'Tambah Mata Uang',
+    'create_button' => 'Buat Mata Uang',
+    'update_button' => 'Perbarui Mata Uang',
+    'currency_name' => 'Nama Mata Uang',
+    'currency_code' => 'Kode Mata Uang',
+    'symbol' => 'Simbol',
+    'thousand_separator' => 'Pemisah Ribuan',
+    'decimal_separator' => 'Pemisah Desimal',
+    'action' => 'Aksi',
+    'excel' => '<i class="bi bi-file-earmark-excel-fill"></i> Excel',
+    'print' => '<i class="bi bi-printer-fill"></i> Cetak',
+    'reset' => '<i class="bi bi-x-circle"></i> Atur Ulang',
+    'reload' => '<i class="bi bi-arrow-repeat"></i> Muat Ulang',
+    'confirm_delete' => 'Anda yakin? Data akan dihapus permanen!',
+];

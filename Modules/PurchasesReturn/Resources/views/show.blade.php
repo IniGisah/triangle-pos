@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Purchase Details')
+@section('title', __('purchasesreturn::purchasesreturn.returns_details_title'))
 
 @section('breadcrumb')
     <ol class="breadcrumb border-0 m-0">
-        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('purchase-returns.index') }}">Purchase Returns</a></li>
-        <li class="breadcrumb-item active">Details</li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('purchasesreturn::purchasesreturn.home') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('purchase-returns.index') }}">{{ __('purchasesreturn::purchasesreturn.returns_breadcrumb') }}</a></li>
+        <li class="breadcrumb-item active">{{ __('purchasesreturn::purchasesreturn.details') }}</li>
     </ol>
 @endsection
 
@@ -17,19 +17,19 @@
                 <div class="card">
                     <div class="card-header d-flex flex-wrap align-items-center">
                         <div>
-                            Reference: <strong>{{ $purchase_return->reference }}</strong>
+                            {{ __('purchasesreturn::purchasesreturn.reference') }}: <strong>{{ $purchase_return->reference }}</strong>
                         </div>
-                        <a target="_blank" class="btn btn-sm btn-secondary mfs-auto mfe-1 d-print-none" href="{{ route('purchase-returns.pdf', $purchase_return->id) }}">
-                            <i class="bi bi-printer"></i> Print
-                        </a>
-                        <a target="_blank" class="btn btn-sm btn-info mfe-1 d-print-none" href="{{ route('purchase-returns.pdf', $purchase_return->id) }}">
-                            <i class="bi bi-save"></i> Save
-                        </a>
+                            <a target="_blank" class="btn btn-sm btn-secondary mfs-auto mfe-1 d-print-none" href="{{ route('purchase-returns.pdf', $purchase_return->id) }}">
+                                {!! __('purchasesreturn::purchasesreturn.print') !!}
+                            </a>
+                            <a target="_blank" class="btn btn-sm btn-info mfe-1 d-print-none" href="{{ route('purchase-returns.pdf', $purchase_return->id) }}">
+                                {{ __('purchasesreturn::purchasesreturn.save') }}
+                            </a>
                     </div>
                     <div class="card-body">
                         <div class="row mb-4">
                             <div class="col-sm-4 mb-3 mb-md-0">
-                                <h5 class="mb-2 border-bottom pb-2">Company Info:</h5>
+                                <h5 class="mb-2 border-bottom pb-2">{{ __('purchasesreturn::purchasesreturn.company_info') }}</h5>
                                 <div><strong>{{ settings()->company_name }}</strong></div>
                                 <div>{{ settings()->company_address }}</div>
                                 <div>Email: {{ settings()->company_email }}</div>
@@ -37,7 +37,7 @@
                             </div>
 
                             <div class="col-sm-4 mb-3 mb-md-0">
-                                <h5 class="mb-2 border-bottom pb-2">Supplier Info:</h5>
+                                <h5 class="mb-2 border-bottom pb-2">{{ __('purchasesreturn::purchasesreturn.supplier_info') }}</h5>
                                 <div><strong>{{ $supplier->supplier_name }}</strong></div>
                                 <div>{{ $supplier->address }}</div>
                                 <div>Email: {{ $supplier->supplier_email }}</div>
@@ -45,14 +45,14 @@
                             </div>
 
                             <div class="col-sm-4 mb-3 mb-md-0">
-                                <h5 class="mb-2 border-bottom pb-2">Invoice Info:</h5>
-                                <div>Invoice: <strong>INV/{{ $purchase_return->reference }}</strong></div>
-                                <div>Date: {{ \Carbon\Carbon::parse($purchase_return->date)->format('d M, Y') }}</div>
+                                <h5 class="mb-2 border-bottom pb-2">{{ __('purchasesreturn::purchasesreturn.invoice_info') }}</h5>
+                                <div>{{ __('purchasesreturn::purchasesreturn.invoice') }}: <strong>{{ __('purchasesreturn::purchasesreturn.invoice_prefix') }}{{ $purchase_return->reference }}</strong></div>
+                                <div>{{ __('purchasesreturn::purchasesreturn.date') }}: {{ \Carbon\Carbon::parse($purchase_return->date)->format('d M, Y') }}</div>
                                 <div>
-                                    Status: <strong>{{ $purchase_return->status }}</strong>
+                                    {{ __('purchasesreturn::purchasesreturn.status') }}: <strong>{{ __('purchasesreturn::purchasesreturn.status_badge_'.strtolower($purchase_return->status)) }}</strong>
                                 </div>
                                 <div>
-                                    Payment Status: <strong>{{ $purchase_return->payment_status }}</strong>
+                                    {{ __('purchasesreturn::purchasesreturn.payment_status') }}: <strong>{{ __('purchasesreturn::purchasesreturn.payment_status_'.strtolower($purchase_return->payment_status)) }}</strong>
                                 </div>
                             </div>
 
@@ -62,12 +62,12 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th class="align-middle">Product</th>
-                                    <th class="align-middle">Net Unit Price</th>
-                                    <th class="align-middle">Quantity</th>
-                                    <th class="align-middle">Discount</th>
-                                    <th class="align-middle">Tax</th>
-                                    <th class="align-middle">Sub Total</th>
+                                    <th class="align-middle">{{ __('purchasesreturn::purchasesreturn.product') }}</th>
+                                    <th class="align-middle">{{ __('purchasesreturn::purchasesreturn.net_unit_price') }}</th>
+                                    <th class="align-middle">{{ __('purchasesreturn::purchasesreturn.quantity') }}</th>
+                                    <th class="align-middle">{{ __('purchasesreturn::purchasesreturn.discount_col') }}</th>
+                                    <th class="align-middle">{{ __('purchasesreturn::purchasesreturn.tax_col') }}</th>
+                                    <th class="align-middle">{{ __('purchasesreturn::purchasesreturn.sub_total') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -107,19 +107,19 @@
                                 <table class="table">
                                     <tbody>
                                     <tr>
-                                        <td class="left"><strong>Discount ({{ $purchase_return->discount_percentage }}%)</strong></td>
+                                        <td class="left"><strong>{{ __('purchasesreturn::purchasesreturn.discount_with_rate', ['rate' => $purchase_return->discount_percentage]) }}</strong></td>
                                         <td class="right">{{ format_currency($purchase_return->discount_amount) }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="left"><strong>Tax ({{ $purchase_return->tax_percentage }}%)</strong></td>
+                                        <td class="left"><strong>{{ __('purchasesreturn::purchasesreturn.tax_with_rate', ['rate' => $purchase_return->tax_percentage]) }}</strong></td>
                                         <td class="right">{{ format_currency($purchase_return->tax_amount) }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="left"><strong>Shipping)</strong></td>
+                                        <td class="left"><strong>{{ __('purchasesreturn::purchasesreturn.shipping') }})</strong></td>
                                         <td class="right">{{ format_currency($purchase_return->shipping_amount) }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="left"><strong>Grand Total</strong></td>
+                                        <td class="left"><strong>{{ __('purchasesreturn::purchasesreturn.grand_total') }}</strong></td>
                                         <td class="right"><strong>{{ format_currency($purchase_return->total_amount) }}</strong></td>
                                     </tr>
                                     </tbody>

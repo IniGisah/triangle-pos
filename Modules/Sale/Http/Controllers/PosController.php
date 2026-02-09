@@ -60,12 +60,18 @@ class PosController extends Controller
             ]);
 
             foreach (Cart::instance('sale')->content() as $cart_item) {
+                $unit_multiplier = $cart_item->options->unit_multiplier ?? 1;
+                $sale_unit_label = $cart_item->options->sale_unit_label ?? $cart_item->options->unit;
+
                 SaleDetails::create([
                     'sale_id' => $sale->id,
                     'product_id' => $cart_item->id,
                     'product_name' => $cart_item->name,
                     'product_code' => $cart_item->options->code,
                     'quantity' => $cart_item->qty,
+                    'sale_unit' => $sale_unit_label,
+                    'sale_unit_multiplier' => $unit_multiplier,
+                    'base_quantity' => $cart_item->qty * $unit_multiplier,
                     'price' => $cart_item->price * 100,
                     'unit_price' => $cart_item->options->unit_price * 100,
                     'sub_total' => $cart_item->options->sub_total * 100,
@@ -76,7 +82,7 @@ class PosController extends Controller
 
                 $product = Product::findOrFail($cart_item->id);
                 $product->update([
-                    'product_quantity' => $product->product_quantity - $cart_item->qty
+                    'product_quantity' => $product->product_quantity - ($cart_item->qty * $unit_multiplier)
                 ]);
             }
 

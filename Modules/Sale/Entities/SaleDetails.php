@@ -14,6 +14,11 @@ class SaleDetails extends Model
 
     protected $with = ['product'];
 
+    protected $casts = [
+        'sale_unit_multiplier' => 'integer',
+        'base_quantity' => 'integer',
+    ];
+
     public function product() {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
@@ -40,5 +45,15 @@ class SaleDetails extends Model
 
     public function getProductTaxAmountAttribute($value) {
         return $value / 100;
+    }
+
+    public function getBaseQuantityAttribute($value) {
+        if (!is_null($value) && $value > 0) {
+            return $value;
+        }
+
+        $multiplier = $this->sale_unit_multiplier ?? 1;
+
+        return $this->quantity * $multiplier;
     }
 }

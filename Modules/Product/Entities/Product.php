@@ -48,4 +48,12 @@ class Product extends Model implements HasMedia
     public function getProductPriceAttribute($value) {
         return ($value / 100);
     }
+
+    public function setWholesalePriceAttribute($value) {
+        $this->attributes['wholesale_price'] = is_null($value) ? null : ($value * 100);
+    }
+
+    public function getWholesalePriceAttribute($value) {
+        return is_null($value) ? null : ($value / 100);
+    }
 }

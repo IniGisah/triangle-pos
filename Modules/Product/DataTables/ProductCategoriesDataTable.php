@@ -35,28 +35,32 @@ class ProductCategoriesDataTable extends DataTable
             ->orderBy(4)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text(__('product::product.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text(__('product::product.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text(__('product::product.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text(__('product::product.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('category_code')
+                ->title(__('product::product.code'))
                 ->addClass('text-center'),
 
             Column::make('category_name')
+                ->title(__('product::product.name'))
                 ->addClass('text-center'),
 
             Column::make('products_count')
+                ->title(__('product::product.products_count'))
                 ->addClass('text-center'),
 
             Column::computed('action')
+                ->title(__('product::product.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->addClass('text-center'),

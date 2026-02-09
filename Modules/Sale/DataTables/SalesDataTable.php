@@ -50,41 +50,48 @@ class SalesDataTable extends DataTable
             ->orderBy(8)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text(__('sale::sale.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text(__('sale::sale.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text(__('sale::sale.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text(__('sale::sale.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('reference')
+                ->title(__('sale::sale.reference'))
                 ->className('text-center align-middle'),
 
             Column::make('customer_name')
-                ->title('Customer')
+                ->title(__('sale::sale.customer'))
                 ->className('text-center align-middle'),
 
             Column::computed('status')
+                ->title(__('sale::sale.status'))
                 ->className('text-center align-middle'),
 
             Column::computed('total_amount')
+                ->title(__('sale::sale.grand_total'))
                 ->className('text-center align-middle'),
 
             Column::computed('paid_amount')
+                ->title(__('sale::sale.paid_amount'))
                 ->className('text-center align-middle'),
 
             Column::computed('due_amount')
+                ->title(__('sale::sale.due_amount'))
                 ->className('text-center align-middle'),
 
             Column::computed('payment_status')
+                ->title(__('sale::sale.payment_status'))
                 ->className('text-center align-middle'),
 
             Column::computed('action')
+                ->title(__('sale::sale.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->className('text-center align-middle'),

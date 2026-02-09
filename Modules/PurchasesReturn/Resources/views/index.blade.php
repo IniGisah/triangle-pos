@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Purchase Returns')
+@section('title', __('purchasesreturn::purchasesreturn.returns_title'))
 
 @section('third_party_stylesheets')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
@@ -8,8 +8,8 @@
 
 @section('breadcrumb')
     <ol class="breadcrumb border-0 m-0">
-        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item active">Purchase Returns</li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('purchasesreturn::purchasesreturn.home') }}</a></li>
+        <li class="breadcrumb-item active">{{ __('purchasesreturn::purchasesreturn.returns_breadcrumb') }}</li>
     </ol>
 @endsection
 
@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-body">
                         <a href="{{ route('purchase-returns.create') }}" class="btn btn-primary">
-                            Add Purchase Return <i class="bi bi-plus"></i>
+                            {{ __('purchasesreturn::purchasesreturn.returns_add') }} <i class="bi bi-plus"></i>
                         </a>
 
                         <hr>

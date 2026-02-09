@@ -32,11 +32,11 @@ class ProductTable extends Component
 
     public function generateBarcodes(Product $product, $quantity) {
         if ($quantity > 100) {
-            return session()->flash('message', 'Max quantity is 100 per barcode generation!');
+            return session()->flash('message', __('livewire.barcode.max_quantity_error'));
         }
 
         if (!is_numeric($product->product_code)) {
-            return session()->flash('message', 'Can not generate Barcode with this type of Product Code');
+            return session()->flash('message', __('livewire.barcode.invalid_code_error'));
         }
 
         $this->barcodes = [];

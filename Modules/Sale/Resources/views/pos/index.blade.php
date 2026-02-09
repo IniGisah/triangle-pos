@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'POS')
+@section('title', __('sale::sale.pos_title'))
 
 @section('third_party_stylesheets')
 
@@ -8,8 +8,8 @@
 
 @section('breadcrumb')
     <ol class="breadcrumb border-0 m-0">
-        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item active">POS</li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('sale::sale.home') }}</a></li>
+        <li class="breadcrumb-item active">{{ __('sale::sale.pos_breadcrumb') }}</li>
     </ol>
 @endsection
 

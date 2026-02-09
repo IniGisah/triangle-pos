@@ -38,35 +38,40 @@ class ExpensesDataTable extends DataTable
             ->orderBy(6)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text(__('expense::expenses.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text(__('expense::expenses.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text(__('expense::expenses.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text(__('expense::expenses.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('date')
+                ->title(__('expense::expenses.date'))
                 ->className('text-center align-middle'),
 
             Column::make('reference')
+                ->title(__('expense::expenses.reference'))
                 ->className('text-center align-middle'),
 
             Column::make('category.category_name')
-                ->title('Category')
+                ->title(__('expense::expenses.category'))
                 ->className('text-center align-middle'),
 
             Column::computed('amount')
+                ->title(__('expense::expenses.amount'))
                 ->className('text-center align-middle'),
 
             Column::make('details')
+                ->title(__('expense::expenses.details'))
                 ->className('text-center align-middle'),
 
             Column::computed('action')
+                ->title(__('expense::expenses.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->className('text-center align-middle'),

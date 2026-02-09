@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Purchases Return Report')
+@section('title', __('reports::reports.purchases_return_title'))
 
 @section('breadcrumb')
     <ol class="breadcrumb border-0 m-0">
-        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item active">Purchases Return Report</li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('reports::reports.home') }}</a></li>
+        <li class="breadcrumb-item active">{{ __('reports::reports.purchases_return_breadcrumb') }}</li>
     </ol>
 @endsection
 

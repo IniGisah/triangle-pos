@@ -21,6 +21,8 @@ class ProductCart extends Component
     public $discount_type;
     public $item_discount;
     public $unit_price;
+    public $sale_unit;
+    public $unit_multiplier;
     public $data;
 
     private $product;
@@ -41,10 +43,12 @@ class ProductCart extends Component
             $cart_items = Cart::instance($this->cart_instance)->content();
 
             foreach ($cart_items as $cart_item) {
-                $this->check_quantity[$cart_item->id] = [$cart_item->options->stock];
+                $this->check_quantity[$cart_item->id] = $cart_item->options->stock;
                 $this->quantity[$cart_item->id] = $cart_item->qty;
                 $this->unit_price[$cart_item->id] = $cart_item->price;
                 $this->discount_type[$cart_item->id] = $cart_item->options->product_discount_type;
+                $this->sale_unit[$cart_item->id] = $cart_item->options->sale_unit ?? 'retail';
+                $this->unit_multiplier[$cart_item->id] = $cart_item->options->unit_multiplier ?? 1;
                 if ($cart_item->options->product_discount_type == 'fixed') {
                     $this->item_discount[$cart_item->id] = $cart_item->options->product_discount;
                 } elseif ($cart_item->options->product_discount_type == 'percentage') {
@@ -60,6 +64,8 @@ class ProductCart extends Component
             $this->unit_price = [];
             $this->discount_type = [];
             $this->item_discount = [];
+            $this->sale_unit = [];
+            $this->unit_multiplier = [];
         }
     }
 
@@ -79,28 +85,36 @@ class ProductCart extends Component
         });
 
         if ($exists->isNotEmpty()) {
-            session()->flash('message', 'Product exists in the cart!');
+            session()->flash('message', __('livewire.alerts.product_exists'));
 
             return;
         }
 
         $this->product = $product;
 
+        $pricing = $this->calculate($product);
+
         $cart->add([
             'id'      => $product['id'],
             'name'    => $product['product_name'],
             'qty'     => 1,
-            'price'   => $this->calculate($product)['price'],
+            'price'   => $pricing['price'],
             'weight'  => 1,
             'options' => [
                 'product_discount'      => 0.00,
                 'product_discount_type' => 'fixed',
-                'sub_total'             => $this->calculate($product)['sub_total'],
+                'sub_total'             => $pricing['sub_total'],
                 'code'                  => $product['product_code'],
                 'stock'                 => $product['product_quantity'],
                 'unit'                  => $product['product_unit'],
-                'product_tax'           => $this->calculate($product)['product_tax'],
-                'unit_price'            => $this->calculate($product)['unit_price']
+                'product_tax'           => $pricing['product_tax'],
+                'unit_price'            => $pricing['unit_price'],
+                'sale_unit'             => 'retail',
+                'sale_unit_label'       => $pricing['sale_unit_label'],
+                'unit_multiplier'       => $pricing['unit_multiplier'],
+                'wholesale_unit'        => $product['wholesale_unit'] ?? null,
+                'wholesale_quantity'    => $product['wholesale_quantity'] ?? null,
+                'wholesale_price'       => $product['wholesale_price'] ?? null,
             ]
         ]);
 
@@ -108,6 +122,8 @@ class ProductCart extends Component
         $this->quantity[$product['id']] = 1;
         $this->discount_type[$product['id']] = 'fixed';
         $this->item_discount[$product['id']] = 0;
+        $this->sale_unit[$product['id']] = 'retail';
+        $this->unit_multiplier[$product['id']] = $pricing['unit_multiplier'];
     }
 
     public function removeItem($row_id) {
@@ -123,9 +139,11 @@ class ProductCart extends Component
     }
 
     public function updateQuantity($row_id, $product_id) {
-        if  ($this->cart_instance == 'sale' || $this->cart_instance == 'purchase_return') {
-            if ($this->check_quantity[$product_id] < $this->quantity[$product_id]) {
-                session()->flash('message', 'The requested quantity is not available in stock.');
+        $current_multiplier = $this->unit_multiplier[$product_id] ?? 1;
+
+        if  ($this->cart_instance == 'sale' || $this->cart_instance == 'purchase_return' || $this->cart_instance == 'sale_return') {
+            if ($this->check_quantity[$product_id] < ($this->quantity[$product_id] * $current_multiplier)) {
+                session()->flash('message', __('livewire.alerts.quantity_not_available'));
                 return;
             }
         }
@@ -142,6 +160,12 @@ class ProductCart extends Component
                 'unit'                  => $cart_item->options->unit,
                 'product_tax'           => $cart_item->options->product_tax,
                 'unit_price'            => $cart_item->options->unit_price,
+                'sale_unit'             => $cart_item->options->sale_unit,
+                'sale_unit_label'       => $cart_item->options->sale_unit_label,
+                'unit_multiplier'       => $cart_item->options->unit_multiplier,
+                'wholesale_unit'        => $cart_item->options->wholesale_unit,
+                'wholesale_quantity'    => $cart_item->options->wholesale_quantity,
+                'wholesale_price'       => $cart_item->options->wholesale_price,
                 'product_discount'      => $cart_item->options->product_discount,
                 'product_discount_type' => $cart_item->options->product_discount_type,
             ]
@@ -179,7 +203,7 @@ class ProductCart extends Component
             $this->updateCartOptions($row_id, $product_id, $cart_item, $discount_amount);
         }
 
-        session()->flash('discount_message' . $product_id, 'Discount added to the product!');
+        session()->flash('discount_message' . $product_id, __('livewire.alerts.discount_added'));
     }
 
     public function updatePrice($row_id, $product_id) {
@@ -189,27 +213,42 @@ class ProductCart extends Component
 
         Cart::instance($this->cart_instance)->update($row_id, ['price' => $this->unit_price[$product['id']]]);
 
+        $pricing = $this->calculate($product->toArray(), $this->sale_unit[$product_id] ?? 'retail', $this->unit_price[$product['id']]);
+
         Cart::instance($this->cart_instance)->update($row_id, [
             'options' => [
-                'sub_total'             => $this->calculate($product, $this->unit_price[$product['id']])['sub_total'],
+                'sub_total'             => $pricing['price'] * $cart_item->qty,
                 'code'                  => $cart_item->options->code,
                 'stock'                 => $cart_item->options->stock,
                 'unit'                  => $cart_item->options->unit,
-                'product_tax'           => $this->calculate($product, $this->unit_price[$product['id']])['product_tax'],
-                'unit_price'            => $this->calculate($product, $this->unit_price[$product['id']])['unit_price'],
+                'product_tax'           => $pricing['product_tax'],
+                'unit_price'            => $pricing['unit_price'],
+                'sale_unit'             => $cart_item->options->sale_unit,
+                'sale_unit_label'       => $cart_item->options->sale_unit_label,
+                'unit_multiplier'       => $cart_item->options->unit_multiplier,
+                'wholesale_unit'        => $cart_item->options->wholesale_unit,
+                'wholesale_quantity'    => $cart_item->options->wholesale_quantity,
+                'wholesale_price'       => $cart_item->options->wholesale_price,
                 'product_discount'      => $cart_item->options->product_discount,
                 'product_discount_type' => $cart_item->options->product_discount_type,
             ]
         ]);
     }
 
-    public function calculate($product, $new_price = null) {
+    public function calculate($product, $saleUnit = 'retail', $new_price = null) {
+        if (is_array($product) === false) {
+            $product = $product->toArray();
+        }
+
         if ($new_price) {
             $product_price = $new_price;
         } else {
             $this->unit_price[$product['id']] = $product['product_price'];
             if ($this->cart_instance == 'purchase' || $this->cart_instance == 'purchase_return') {
                 $this->unit_price[$product['id']] = $product['product_cost'];
+                $saleUnit = 'retail';
+            } elseif ($saleUnit === 'wholesale' && !empty($product['wholesale_price'])) {
+                $this->unit_price[$product['id']] = $product['wholesale_price'];
             }
             $product_price = $this->unit_price[$product['id']];
         }
@@ -217,6 +256,13 @@ class ProductCart extends Component
         $unit_price = 0;
         $product_tax = 0;
         $sub_total = 0;
+        $unit_multiplier = 1;
+        $sale_unit_label = $product['product_unit'];
+
+        if (($saleUnit === 'wholesale') && !empty($product['wholesale_quantity'])) {
+            $unit_multiplier = $product['wholesale_quantity'];
+            $sale_unit_label = $product['wholesale_unit'] ?? $sale_unit_label;
+        }
 
         if ($product['product_tax_type'] == 1) {
             $price = $product_price + ($product_price * ($product['product_order_tax'] / 100));
@@ -235,7 +281,14 @@ class ProductCart extends Component
             $sub_total = $product_price;
         }
 
-        return ['price' => $price, 'unit_price' => $unit_price, 'product_tax' => $product_tax, 'sub_total' => $sub_total];
+        return [
+            'price' => $price,
+            'unit_price' => $unit_price,
+            'product_tax' => $product_tax,
+            'sub_total' => $sub_total,
+            'unit_multiplier' => $unit_multiplier,
+            'sale_unit_label' => $sale_unit_label,
+        ];
     }
 
     public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount) {
@@ -246,8 +299,57 @@ class ProductCart extends Component
             'unit'                  => $cart_item->options->unit,
             'product_tax'           => $cart_item->options->product_tax,
             'unit_price'            => $cart_item->options->unit_price,
+            'sale_unit'             => $cart_item->options->sale_unit,
+            'sale_unit_label'       => $cart_item->options->sale_unit_label,
+            'unit_multiplier'       => $cart_item->options->unit_multiplier,
+            'wholesale_unit'        => $cart_item->options->wholesale_unit,
+            'wholesale_quantity'    => $cart_item->options->wholesale_quantity,
+            'wholesale_price'       => $cart_item->options->wholesale_price,
             'product_discount'      => $discount_amount,
             'product_discount_type' => $this->discount_type[$product_id],
         ]]);
+    }
+
+    public function changeSaleUnit($row_id, $product_id, $sale_unit) {
+        $product = Product::findOrFail($product_id)->toArray();
+
+        if ($this->cart_instance == 'purchase' || $this->cart_instance == 'purchase_return') {
+            return;
+        }
+
+        $pricing = $this->calculate($product, $sale_unit);
+        $requested_base = $this->quantity[$product_id] * $pricing['unit_multiplier'];
+
+        if (($this->cart_instance == 'sale' || $this->cart_instance == 'sale_return') && $this->check_quantity[$product_id] < $requested_base) {
+            session()->flash('message', __('livewire.alerts.quantity_not_available'));
+
+            return;
+        }
+
+        $this->sale_unit[$product_id] = $sale_unit;
+        $this->unit_multiplier[$product_id] = $pricing['unit_multiplier'];
+
+        Cart::instance($this->cart_instance)->update($row_id, ['price' => $pricing['price']]);
+
+        $cart_item = Cart::instance($this->cart_instance)->get($row_id);
+
+        Cart::instance($this->cart_instance)->update($row_id, [
+            'options' => [
+                'sub_total'             => $pricing['price'] * $cart_item->qty,
+                'code'                  => $cart_item->options->code,
+                'stock'                 => $cart_item->options->stock,
+                'unit'                  => $cart_item->options->unit,
+                'product_tax'           => $pricing['product_tax'],
+                'unit_price'            => $pricing['unit_price'],
+                'sale_unit'             => $sale_unit,
+                'sale_unit_label'       => $pricing['sale_unit_label'],
+                'unit_multiplier'       => $pricing['unit_multiplier'],
+                'wholesale_unit'        => $product['wholesale_unit'] ?? null,
+                'wholesale_quantity'    => $product['wholesale_quantity'] ?? null,
+                'wholesale_price'       => $product['wholesale_price'] ?? null,
+                'product_discount'      => $cart_item->options->product_discount,
+                'product_discount_type' => $cart_item->options->product_discount_type,
+            ]
+        ]);
     }
 }

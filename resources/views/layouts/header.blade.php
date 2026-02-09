@@ -7,13 +7,25 @@
 </button>
 
 <ul class="c-header-nav ml-auto">
-
+    <li class="c-header-nav-item dropdown">
+        <a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            <i class="bi bi-translate mr-1"></i> {{ strtoupper(app()->getLocale()) }}
+        </a>
+        <div class="dropdown-menu dropdown-menu-right pt-0">
+            <div class="dropdown-header bg-light py-2"><strong>{{ __('nav.language') }}</strong></div>
+            <form method="POST" action="{{ route('language.switch') }}">
+                @csrf
+                <button class="dropdown-item" type="submit" name="locale" value="en">{{ __('nav.english') }}</button>
+                <button class="dropdown-item" type="submit" name="locale" value="id">{{ __('nav.indonesian') }}</button>
+            </form>
+        </div>
+    </li>
 </ul>
 <ul class="c-header-nav ml-auto mr-4">
     @can('create_pos_sales')
     <li class="c-header-nav-item mr-3">
         <a class="btn btn-primary btn-pill {{ request()->routeIs('app.pos.index') ? 'disabled' : '' }}" href="{{ route('app.pos.index') }}">
-            <i class="bi bi-cart mr-1"></i> POS System
+            <i class="bi bi-cart mr-1"></i> {{ __('nav.pos_system') }}
         </a>
     </li>
     @endcan
@@ -31,15 +43,15 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg pt-0">
             <div class="dropdown-header bg-light">
-                <strong>{{ $low_quantity_products->count() }} Notifications</strong>
+                <strong>{{ __('nav.notifications_count', ['count' => $low_quantity_products->count()]) }}</strong>
             </div>
             @forelse($low_quantity_products as $product)
                 <a class="dropdown-item" href="{{ route('products.show', $product->id) }}">
-                    <i class="bi bi-hash mr-1 text-primary"></i> Product: "{{ $product->product_code }}" is low in quantity!
+                    <i class="bi bi-hash mr-1 text-primary"></i> {{ __('nav.low_quantity_alert', ['code' => $product->product_code]) }}
                 </a>
             @empty
                 <a class="dropdown-item" href="#">
-                    <i class="bi bi-app-indicator mr-2 text-danger"></i> No notifications available.
+                    <i class="bi bi-app-indicator mr-2 text-danger"></i> {{ __('nav.no_notifications') }}
                 </a>
             @endforelse
         </div>
@@ -58,12 +70,12 @@
             </div>
         </a>
         <div class="dropdown-menu dropdown-menu-right pt-0">
-            <div class="dropdown-header bg-light py-2"><strong>Account</strong></div>
+            <div class="dropdown-header bg-light py-2"><strong>{{ __('nav.account') }}</strong></div>
             <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                <i class="mfe-2  bi bi-person" style="font-size: 1.2rem;"></i> Profile
+                <i class="mfe-2  bi bi-person" style="font-size: 1.2rem;"></i> {{ __('nav.profile') }}
             </a>
             <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="mfe-2  bi bi-box-arrow-left" style="font-size: 1.2rem;"></i> Logout
+                <i class="mfe-2  bi bi-box-arrow-left" style="font-size: 1.2rem;"></i> {{ __('nav.logout') }}
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf

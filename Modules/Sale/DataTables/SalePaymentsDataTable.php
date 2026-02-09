@@ -38,31 +38,36 @@ class SalePaymentsDataTable extends DataTable
             ->orderBy(5)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text(__('sale::sale.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text(__('sale::sale.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text(__('sale::sale.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text(__('sale::sale.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('date')
+                ->title(__('sale::sale.date'))
                 ->className('align-middle text-center'),
 
             Column::make('reference')
+                ->title(__('sale::sale.reference'))
                 ->className('align-middle text-center'),
 
             Column::computed('amount')
+                ->title(__('sale::sale.amount'))
                 ->className('align-middle text-center'),
 
             Column::make('payment_method')
+                ->title(__('sale::sale.payment_method'))
                 ->className('align-middle text-center'),
 
             Column::computed('action')
+                ->title(__('sale::sale.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->className('align-middle text-center'),

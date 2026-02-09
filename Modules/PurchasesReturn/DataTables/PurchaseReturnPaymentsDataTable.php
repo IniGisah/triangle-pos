@@ -38,31 +38,36 @@ class PurchaseReturnPaymentsDataTable extends DataTable
             ->orderBy(5)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text(__('purchasesreturn::purchasesreturn.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text(__('purchasesreturn::purchasesreturn.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text(__('purchasesreturn::purchasesreturn.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text(__('purchasesreturn::purchasesreturn.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('date')
+                ->title(__('purchasesreturn::purchasesreturn.date'))
                 ->className('align-middle text-center'),
 
             Column::make('reference')
+                ->title(__('purchasesreturn::purchasesreturn.reference'))
                 ->className('align-middle text-center'),
 
             Column::computed('amount')
+                ->title(__('purchasesreturn::purchasesreturn.amount'))
                 ->className('align-middle text-center'),
 
             Column::make('payment_method')
+                ->title(__('purchasesreturn::purchasesreturn.payment_method'))
                 ->className('align-middle text-center'),
 
             Column::computed('action')
+                ->title(__('purchasesreturn::purchasesreturn.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->className('align-middle text-center'),

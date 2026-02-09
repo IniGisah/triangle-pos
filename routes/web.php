@@ -12,6 +12,9 @@ Route::get('/', function () {
     return view('auth.login');
 })->middleware('guest');
 
+Route::post('/language', 'LanguageController@switch')
+    ->name('language.switch');
+
 Auth::routes(['register' => false]);
 
 Route::group(['middleware' => 'auth'], function () {

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Units')
+@section('title', __('setting::setting.units_title'))
 
 @section('third_party_stylesheets')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
@@ -9,8 +9,8 @@
 
 @section('breadcrumb')
     <ol class="breadcrumb border-0 m-0">
-        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item active">Units</li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('setting::setting.home') }}</a></li>
+        <li class="breadcrumb-item active">{{ __('setting::setting.units_breadcrumb') }}</li>
     </ol>
 @endsection
 
@@ -21,7 +21,7 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <a href="{{ route('units.create') }}" class="btn btn-primary">
-                            Add Unit <i class="bi bi-plus"></i>
+                            {{ __('setting::setting.units_add') }} <i class="bi bi-plus"></i>
                         </a>
 
                         <hr>
@@ -30,12 +30,12 @@
                             <table class="table table-bordered mb-0 text-center" id="data-table">
                                 <thead>
                                 <tr>
-                                    <th class="align-middle">No.</th>
-                                    <th class="align-middle">Name</th>
-                                    <th class="align-middle">Short Name</th>
-                                    <th class="align-middle">Operator</th>
-                                    <th class="align-middle">Operation Value</th>
-                                    <th class="align-middle">Action</th>
+                                    <th class="align-middle">{{ __('setting::setting.no') }}</th>
+                                    <th class="align-middle">{{ __('setting::setting.name') }}</th>
+                                    <th class="align-middle">{{ __('setting::setting.short_name') }}</th>
+                                    <th class="align-middle">{{ __('setting::setting.operator') }}</th>
+                                    <th class="align-middle">{{ __('setting::setting.operation_value') }}</th>
+                                    <th class="align-middle">{{ __('setting::setting.action') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -52,7 +52,7 @@
                                             </a>
                                             <button id="delete" class="btn btn-danger btn-sm delete-confirm" onclick="
                                                 event.preventDefault();
-                                                if (confirm('Are you sure? It will delete the data permanently!')) {
+                                                if (confirm('{{ __('setting::setting.confirm_delete') }}')) {
                                                 document.getElementById('destroy{{ $unit->id }}').submit()
                                                 }
                                                 ">
@@ -83,11 +83,11 @@
         var table = $('#data-table').DataTable({
             dom: "<'row'<'col-md-3'l><'col-md-5 mb-2'B><'col-md-4 justify-content-end'f>>tr<'row'<'col-md-5'i><'col-md-7 mt-2'p>>",
             "buttons": [
-                {extend: 'excel',text: '<i class="bi bi-file-earmark-excel-fill"></i> Excel'},
-                {extend: 'csv',text: '<i class="bi bi-file-earmark-excel-fill"></i> CSV'},
+                {extend: 'excel',text: '{!! __('setting::setting.excel') !!}'},
+                {extend: 'csv',text: '{!! __('setting::setting.csv') !!}'},
                 {extend: 'print',
-                    text: '<i class="bi bi-printer-fill"></i> Print',
-                    title: "Units",
+                    text: '{!! __('setting::setting.print') !!}',
+                    title: "{{ __('setting::setting.units_print_title') }}",
                     exportOptions: {
                         columns: [ 0, 1, 2, 3, 4 ]
                     },

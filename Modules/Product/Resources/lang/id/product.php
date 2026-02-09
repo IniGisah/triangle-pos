@@ -1,0 +1,73 @@
+<?php
+
+return [
+    'home' => 'Beranda',
+
+    'products_title' => 'Produk',
+    'products_breadcrumb' => 'Produk',
+    'products_add' => 'Tambah Produk',
+    'products_create_title' => 'Buat Produk',
+    'products_edit_title' => 'Ubah Produk',
+    'products_show_title' => 'Detail Produk',
+    'products_create_button' => 'Buat Produk',
+    'products_update_button' => 'Perbarui Produk',
+    'products_details' => 'Detail',
+
+    'categories_title' => 'Kategori Produk',
+    'categories_breadcrumb' => 'Kategori',
+    'categories_add' => 'Tambah Kategori',
+    'categories_create_title' => 'Buat Kategori',
+    'categories_edit_title' => 'Ubah Kategori Produk',
+    'categories_update_button' => 'Perbarui',
+    'categories_create_button' => 'Buat',
+
+    'print_barcode_title' => 'Cetak Barcode',
+
+    'name' => 'Nama',
+    'code' => 'Kode',
+    'category' => 'Kategori',
+    'barcode_symbology' => 'Simbol Barcode',
+    'cost' => 'Biaya',
+    'price' => 'Harga',
+    'quantity' => 'Kuantitas',
+    'stock_worth' => 'Nilai Stok',
+    'alert_quantity' => 'Kuantitas Peringatan',
+    'tax_percentage' => 'Pajak (%)',
+    'tax_type' => 'Jenis Pajak',
+    'tax_type_none' => 'Tanpa Pajak',
+    'tax_type_exclusive' => 'Eksklusif',
+    'tax_type_inclusive' => 'Inklusif',
+    'unit' => 'Satuan',
+    'note' => 'Catatan',
+    'action' => 'Aksi',
+    'details' => 'Detail',
+    'image' => 'Gambar',
+    'product_images' => 'Gambar Produk',
+    'products_count' => 'Produk',
+
+    'wholesale_unit' => 'Satuan Grosir',
+    'wholesale_quantity' => 'Isi per Grosir',
+    'wholesale_quantity_placeholder' => 'mis: 10',
+    'wholesale_price' => 'Harga Grosir',
+    'wholesale_price_placeholder' => 'Biarkan kosong jika tidak dipakai',
+
+    'select_category' => 'Pilih Kategori',
+    'select_symbology' => 'Pilih Simbol',
+    'select_tax_type' => 'Pilih Jenis Pajak',
+    'select_unit' => 'Pilih Satuan',
+    'add' => 'Tambah',
+
+    'product_code_note' => 'CATATAN: Kode Produk harus berupa angka untuk membuat barcode!',
+    'price_label' => 'Harga::',
+
+    'excel' => '<i class="bi bi-file-earmark-excel-fill"></i> Excel',
+    'print' => '<i class="bi bi-printer-fill"></i> Cetak',
+    'reset' => '<i class="bi bi-x-circle"></i> Atur Ulang',
+    'reload' => '<i class="bi bi-arrow-repeat"></i> Muat Ulang',
+    'confirm_delete' => 'Anda yakin? Data akan dihapus permanen!',
+
+    'dropzone_remove' => "<i class='bi bi-x-circle text-danger'></i> hapus",
+
+    'breadcrumb_products' => 'Produk',
+    'breadcrumb_categories' => 'Kategori',
+];

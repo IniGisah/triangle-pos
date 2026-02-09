@@ -15,10 +15,10 @@
                 <table class="table table-bordered mb-0">
                     <thead>
                     <tr class="align-middle">
-                        <th class="align-middle">Product Name</th>
-                        <th class="align-middle">Code</th>
+                        <th class="align-middle">{{ __('livewire.barcode.product_name') }}</th>
+                        <th class="align-middle">{{ __('livewire.barcode.code') }}</th>
                         <th class="align-middle">
-                            Quantity <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="Max Quantity: 100"></i>
+                            {{ __('livewire.barcode.quantity') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="{{ __('livewire.barcode.quantity_help') }}"></i>
                         </th>
                     </tr>
                     </thead>
@@ -32,7 +32,7 @@
                             </td>
                         @else
                             <td colspan="3" class="text-center">
-                                <span class="text-danger">Please search & select a product!</span>
+                                <span class="text-danger">{{ __('livewire.alerts.no_product') }}</span>
                             </td>
                         @endif
                     </tr>
@@ -41,7 +41,7 @@
             </div>
             <div class="mt-3">
                 <button wire:click="generateBarcodes({{ $product }}, {{ $quantity }})" type="button" class="btn btn-primary">
-                    <i class="bi bi-upc-scan"></i> Generate Barcodes
+                    <i class="bi bi-upc-scan"></i> {{ __('livewire.barcode.generate') }}
                 </button>
             </div>
         </div>
@@ -50,7 +50,7 @@
     <div wire:loading wire:target="generateBarcodes" class="w-100">
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
+                <span class="sr-only">{{ __('livewire.common.loading') }}</span>
             </div>
         </div>
     </div>
@@ -59,7 +59,7 @@
         <div class="text-right mb-3">
             <button wire:click="getPdf" wire:loading.attr="disabled" type="button" class="btn btn-primary">
                 <span wire:loading wire:target="getPdf" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <i wire:loading.remove wire:target="getPdf" class="bi bi-file-earmark-pdf"></i> Download PDF
+                <i wire:loading.remove wire:target="getPdf" class="bi bi-file-earmark-pdf"></i> {{ __('livewire.barcode.download_pdf') }}
             </button>
         </div>
         <div class="card">
@@ -74,7 +74,7 @@
                                 {!! $barcode !!}
                             </div>
                             <p style="font-size: 15px;color: #000;">
-                                Price:: {{ format_currency($product->product_price) }}
+                                {{ __('livewire.barcode.price_label') }} {{ format_currency($product->product_price) }}
                             </p>
                         </div>
                     @endforeach

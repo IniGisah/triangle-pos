@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'home' => 'Home',
+    'index_title' => 'Currencies',
+    'breadcrumb_index' => 'Currencies',
+    'breadcrumb_add' => 'Add',
+    'breadcrumb_edit' => 'Edit',
+    'create_title' => 'Create Currency',
+    'edit_title' => 'Edit Currency',
+    'add_button' => 'Add Currency',
+    'create_button' => 'Create Currency',
+    'update_button' => 'Update Currency',
+    'currency_name' => 'Currency Name',
+    'currency_code' => 'Currency Code',
+    'symbol' => 'Symbol',
+    'thousand_separator' => 'Thousand Separator',
+    'decimal_separator' => 'Decimal Separator',
+    'action' => 'Action',
+    'excel' => '<i class="bi bi-file-earmark-excel-fill"></i> Excel',
+    'print' => '<i class="bi bi-printer-fill"></i> Print',
+    'reset' => '<i class="bi bi-x-circle"></i> Reset',
+    'reload' => '<i class="bi bi-arrow-repeat"></i> Reload',
+    'confirm_delete' => 'Are you sure? It will delete the data permanently!',
+];

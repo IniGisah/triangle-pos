@@ -27,7 +27,10 @@ class UpdateProductRequest extends FormRequest
             'product_order_tax' => ['nullable', 'integer', 'min:0', 'max:100'],
             'product_tax_type' => ['nullable', 'integer'],
             'product_note' => ['nullable', 'string', 'max:1000'],
-            'category_id' => ['required', 'integer']
+            'category_id' => ['required', 'integer'],
+            'wholesale_unit' => ['nullable', 'string', 'max:255'],
+            'wholesale_quantity' => ['nullable', 'integer', 'min:1', 'required_with:wholesale_unit,wholesale_price'],
+            'wholesale_price' => ['nullable', 'numeric', 'max:2147483647', 'required_with:wholesale_unit,wholesale_quantity']
         ];
     }
 

@@ -52,13 +52,13 @@ class ProductDataTable extends DataTable
                     ->orderBy(7)
                     ->buttons(
                         Button::make('excel')
-                            ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                            ->text(__('product::product.excel')),
                         Button::make('print')
-                            ->text('<i class="bi bi-printer-fill"></i> Print'),
+                            ->text(__('product::product.print')),
                         Button::make('reset')
-                            ->text('<i class="bi bi-x-circle"></i> Reset'),
+                            ->text(__('product::product.reset')),
                         Button::make('reload')
-                            ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                            ->text(__('product::product.reload'))
                     );
     }
 
@@ -66,34 +66,35 @@ class ProductDataTable extends DataTable
     {
         return [
             Column::computed('product_image')
-                ->title('Image')
+                ->title(__('product::product.image'))
                 ->className('text-center align-middle'),
 
             Column::make('category.category_name')
-                ->title('Category')
+                ->title(__('product::product.category'))
                 ->className('text-center align-middle'),
 
             Column::make('product_code')
-                ->title('Code')
+                ->title(__('product::product.code'))
                 ->className('text-center align-middle'),
 
             Column::make('product_name')
-                ->title('Name')
+                ->title(__('product::product.name'))
                 ->className('text-center align-middle'),
 
             Column::computed('product_cost')
-                ->title('Cost')
+                ->title(__('product::product.cost'))
                 ->className('text-center align-middle'),
 
             Column::computed('product_price')
-                ->title('Price')
+                ->title(__('product::product.price'))
                 ->className('text-center align-middle'),
 
             Column::computed('product_quantity')
-                ->title('Quantity')
+                ->title(__('product::product.quantity'))
                 ->className('text-center align-middle'),
 
             Column::computed('action')
+                ->title(__('product::product.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->className('text-center align-middle'),

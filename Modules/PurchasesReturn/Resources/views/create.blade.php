@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Create Purchase Return')
+@section('title', __('purchasesreturn::purchasesreturn.returns_create_title'))
 
 @section('breadcrumb')
     <ol class="breadcrumb border-0 m-0">
-        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('purchase-returns.index') }}">Purchase Returns</a></li>
-        <li class="breadcrumb-item active">Add</li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('purchasesreturn::purchasesreturn.home') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('purchase-returns.index') }}">{{ __('purchasesreturn::purchasesreturn.returns_breadcrumb') }}</a></li>
+        <li class="breadcrumb-item active">{{ __('purchasesreturn::purchasesreturn.returns_create_title') }}</li>
     </ol>
 @endsection
 
@@ -28,14 +28,14 @@
                             <div class="form-row">
                                 <div class="col-lg-4">
                                     <div class="form-group">
-                                        <label for="reference">Reference <span class="text-danger">*</span></label>
+                                        <label for="reference">{{ __('purchasesreturn::purchasesreturn.reference') }} <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="reference" required readonly value="PRRN">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="from-group">
                                         <div class="form-group">
-                                            <label for="supplier_id">Supplier <span class="text-danger">*</span></label>
+                                            <label for="supplier_id">{{ __('purchasesreturn::purchasesreturn.supplier') }} <span class="text-danger">*</span></label>
                                             <select class="form-control" name="supplier_id" id="supplier_id" required>
                                                 @foreach(\Modules\People\Entities\Supplier::all() as $supplier)
                                                     <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }}</option>
@@ -47,7 +47,7 @@
                                 <div class="col-lg-4">
                                     <div class="from-group">
                                         <div class="form-group">
-                                            <label for="date">Date <span class="text-danger">*</span></label>
+                                            <label for="date">{{ __('purchasesreturn::purchasesreturn.date') }} <span class="text-danger">*</span></label>
                                             <input type="date" class="form-control" name="date" required value="{{ now()->format('Y-m-d') }}">
                                         </div>
                                     </div>
@@ -59,31 +59,31 @@
                             <div class="form-row">
                                 <div class="col-lg-4">
                                     <div class="form-group">
-                                        <label for="status">Status <span class="text-danger">*</span></label>
+                                        <label for="status">{{ __('purchasesreturn::purchasesreturn.status') }} <span class="text-danger">*</span></label>
                                         <select class="form-control" name="status" id="status" required>
-                                            <option value="Pending">Pending</option>
-                                            <option value="Shipped">Shipped</option>
-                                            <option value="Completed">Completed</option>
+                                            <option value="Pending">{{ __('purchasesreturn::purchasesreturn.status_option_pending') }}</option>
+                                            <option value="Shipped">{{ __('purchasesreturn::purchasesreturn.status_option_shipped') }}</option>
+                                            <option value="Completed">{{ __('purchasesreturn::purchasesreturn.status_option_completed') }}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="from-group">
                                         <div class="form-group">
-                                            <label for="payment_method">Payment Method <span class="text-danger">*</span></label>
+                                            <label for="payment_method">{{ __('purchasesreturn::purchasesreturn.payment_method') }} <span class="text-danger">*</span></label>
                                             <select class="form-control" name="payment_method" id="payment_method" required>
-                                                <option value="Cash">Cash</option>
-                                                <option value="Credit Card">Credit Card</option>
-                                                <option value="Bank Transfer">Bank Transfer</option>
-                                                <option value="Cheque">Cheque</option>
-                                                <option value="Other">Other</option>
+                                                <option value="Cash">{{ __('purchasesreturn::purchasesreturn.payment_cash') }}</option>
+                                                <option value="Credit Card">{{ __('purchasesreturn::purchasesreturn.payment_credit_card') }}</option>
+                                                <option value="Bank Transfer">{{ __('purchasesreturn::purchasesreturn.payment_bank_transfer') }}</option>
+                                                <option value="Cheque">{{ __('purchasesreturn::purchasesreturn.payment_cheque') }}</option>
+                                                <option value="Other">{{ __('purchasesreturn::purchasesreturn.payment_other') }}</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group">
-                                        <label for="paid_amount">Amount Received <span class="text-danger">*</span></label>
+                                        <label for="paid_amount">{{ __('purchasesreturn::purchasesreturn.received_amount') }} <span class="text-danger">*</span></label>
                                         <div class="input-group">
                                             <input id="paid_amount" type="text" class="form-control" name="paid_amount" required>
                                             <div class="input-group-append">
@@ -97,13 +97,13 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="note">Note (If Needed)</label>
+                                <label for="note">{{ __('purchasesreturn::purchasesreturn.note_if_needed') }}</label>
                                 <textarea name="note" id="note" rows="5" class="form-control"></textarea>
                             </div>
 
                             <div class="mt-3">
                                 <button type="submit" class="btn btn-primary">
-                                    Create Purchase Return <i class="bi bi-check"></i>
+                                    {{ __('purchasesreturn::purchasesreturn.create_button') }} <i class="bi bi-check"></i>
                                 </button>
                             </div>
                         </form>

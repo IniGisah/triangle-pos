@@ -35,26 +35,28 @@ class AdjustmentsDataTable extends DataTable
             ->orderBy(4)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text(__('adjustment::adjustments.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text(__('adjustment::adjustments.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text(__('adjustment::adjustments.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text(__('adjustment::adjustments.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('date')
+                ->title(__('adjustment::adjustments.date'))
                 ->className('text-center align-middle'),
 
             Column::make('reference')
+                ->title(__('adjustment::adjustments.reference'))
                 ->className('text-center align-middle'),
 
             Column::make('adjusted_products_count')
-                ->title('Products')
+                ->title(__('adjustment::adjustments.products'))
                 ->className('text-center align-middle'),
 
             Column::computed('action')

@@ -65,9 +65,9 @@
             </p>
         </div>
         <p>
-            Date: {{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}<br>
-            Reference: {{ $sale->reference }}<br>
-            Name: {{ $sale->customer_name }}
+            {{ __('sale::sale.date') }}: {{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}<br>
+            {{ __('sale::sale.reference') }}: {{ $sale->reference }}<br>
+            {{ __('sale::sale.name') }}: {{ $sale->customer_name }}
         </p>
         <table class="table-data">
             <tbody>
@@ -75,7 +75,7 @@
                 <tr>
                     <td colspan="2">
                         {{ $saleDetail->product->product_name }}
-                        ({{ $saleDetail->quantity }} x {{ format_currency($saleDetail->price) }})
+                        ({{ $saleDetail->quantity }} {{ $saleDetail->sale_unit ?? $saleDetail->product->product_unit }} x {{ format_currency($saleDetail->price) }})
                     </td>
                     <td style="text-align:right;vertical-align:bottom">{{ format_currency($saleDetail->sub_total) }}</td>
                 </tr>
@@ -83,24 +83,24 @@
 
             @if($sale->tax_percentage)
                 <tr>
-                    <th colspan="2" style="text-align:left">Tax ({{ $sale->tax_percentage }}%)</th>
+                    <th colspan="2" style="text-align:left">{{ __('sale::sale.tax_with_rate', ['rate' => $sale->tax_percentage]) }}</th>
                     <th style="text-align:right">{{ format_currency($sale->tax_amount) }}</th>
                 </tr>
             @endif
             @if($sale->discount_percentage)
                 <tr>
-                    <th colspan="2" style="text-align:left">Discount ({{ $sale->discount_percentage }}%)</th>
+                    <th colspan="2" style="text-align:left">{{ __('sale::sale.discount_with_rate', ['rate' => $sale->discount_percentage]) }}</th>
                     <th style="text-align:right">{{ format_currency($sale->discount_amount) }}</th>
                 </tr>
             @endif
             @if($sale->shipping_amount)
                 <tr>
-                    <th colspan="2" style="text-align:left">Shipping</th>
+                    <th colspan="2" style="text-align:left">{{ __('sale::sale.shipping') }}</th>
                     <th style="text-align:right">{{ format_currency($sale->shipping_amount) }}</th>
                 </tr>
             @endif
             <tr>
-                <th colspan="2" style="text-align:left">Grand Total</th>
+                <th colspan="2" style="text-align:left">{{ __('sale::sale.grand_total') }}</th>
                 <th style="text-align:right">{{ format_currency($sale->total_amount) }}</th>
             </tr>
             </tbody>
@@ -109,10 +109,10 @@
             <tbody>
                 <tr style="background-color:#ddd;">
                     <td class="centered" style="padding: 5px;">
-                        Paid By: {{ $sale->payment_method }}
+                        {{ __('sale::sale.paid_by') }}: {{ $sale->payment_method }}
                     </td>
                     <td class="centered" style="padding: 5px;">
-                        Amount: {{ format_currency($sale->paid_amount) }}
+                        {{ __('sale::sale.amount_label') }}: {{ format_currency($sale->paid_amount) }}
                     </td>
                 </tr>
                 <tr style="border-bottom: 0;">

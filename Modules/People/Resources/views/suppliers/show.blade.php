@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Supplier Details')
+@section('title', __('people::people.suppliers_show_title'))
 
 @section('breadcrumb')
     <ol class="breadcrumb border-0 m-0">
-        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('suppliers.index') }}">Suppliers</a></li>
-        <li class="breadcrumb-item active">Details</li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('nav.home') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('suppliers.index') }}">{{ __('people::people.suppliers_breadcrumb') }}</a></li>
+        <li class="breadcrumb-item active">{{ __('people::people.suppliers_details') }}</li>
     </ol>
 @endsection
 
@@ -19,27 +19,27 @@
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <tr>
-                                    <th>Supplier Name</th>
+                                    <th>{{ __('people::people.name') }}</th>
                                     <td>{{ $supplier->supplier_name }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Supplier Email</th>
+                                    <th>{{ __('people::people.email') }}</th>
                                     <td>{{ $supplier->supplier_email }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Supplier Phone</th>
+                                    <th>{{ __('people::people.phone') }}</th>
                                     <td>{{ $supplier->supplier_phone }}</td>
                                 </tr>
                                 <tr>
-                                    <th>City</th>
+                                    <th>{{ __('people::people.city') }}</th>
                                     <td>{{ $supplier->city }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Country</th>
+                                    <th>{{ __('people::people.country') }}</th>
                                     <td>{{ $supplier->country }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Address</th>
+                                    <th>{{ __('people::people.address') }}</th>
                                     <td>{{ $supplier->address }}</td>
                                 </tr>
                             </table>

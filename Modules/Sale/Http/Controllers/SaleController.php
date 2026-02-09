@@ -65,12 +65,18 @@ class SaleController extends Controller
             ]);
 
             foreach (Cart::instance('sale')->content() as $cart_item) {
+                $unit_multiplier = $cart_item->options->unit_multiplier ?? 1;
+                $sale_unit_label = $cart_item->options->sale_unit_label ?? $cart_item->options->unit;
+
                 SaleDetails::create([
                     'sale_id' => $sale->id,
                     'product_id' => $cart_item->id,
                     'product_name' => $cart_item->name,
                     'product_code' => $cart_item->options->code,
                     'quantity' => $cart_item->qty,
+                    'sale_unit' => $sale_unit_label,
+                    'sale_unit_multiplier' => $unit_multiplier,
+                    'base_quantity' => $cart_item->qty * $unit_multiplier,
                     'price' => $cart_item->price * 100,
                     'unit_price' => $cart_item->options->unit_price * 100,
                     'sub_total' => $cart_item->options->sub_total * 100,
@@ -82,7 +88,7 @@ class SaleController extends Controller
                 if ($request->status == 'Shipped' || $request->status == 'Completed') {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
-                        'product_quantity' => $product->product_quantity - $cart_item->qty
+                        'product_quantity' => $product->product_quantity - ($cart_item->qty * $unit_multiplier)
                     ]);
                 }
             }
@@ -138,7 +144,13 @@ class SaleController extends Controller
                     'code'        => $sale_detail->product_code,
                     'stock'       => Product::findOrFail($sale_detail->product_id)->product_quantity,
                     'product_tax' => $sale_detail->product_tax_amount,
-                    'unit_price'  => $sale_detail->unit_price
+                    'unit_price'  => $sale_detail->unit_price,
+                    'sale_unit'   => $sale_detail->sale_unit ?? 'retail',
+                    'sale_unit_label' => $sale_detail->sale_unit ?? ($sale_detail->product->product_unit ?? ''),
+                    'unit_multiplier' => $sale_detail->sale_unit_multiplier ?? 1,
+                    'wholesale_unit' => $sale_detail->product->wholesale_unit ?? null,
+                    'wholesale_quantity' => $sale_detail->product->wholesale_quantity ?? null,
+                    'wholesale_price' => $sale_detail->product->wholesale_price ?? null,
                 ]
             ]);
         }
@@ -163,8 +175,9 @@ class SaleController extends Controller
             foreach ($sale->saleDetails as $sale_detail) {
                 if ($sale->status == 'Shipped' || $sale->status == 'Completed') {
                     $product = Product::findOrFail($sale_detail->product_id);
+                    $base_quantity = $sale_detail->base_quantity ?: ($sale_detail->quantity * ($sale_detail->sale_unit_multiplier ?: 1));
                     $product->update([
-                        'product_quantity' => $product->product_quantity + $sale_detail->quantity
+                        'product_quantity' => $product->product_quantity + $base_quantity
                     ]);
                 }
                 $sale_detail->delete();
@@ -190,12 +203,18 @@ class SaleController extends Controller
             ]);
 
             foreach (Cart::instance('sale')->content() as $cart_item) {
+                $unit_multiplier = $cart_item->options->unit_multiplier ?? 1;
+                $sale_unit_label = $cart_item->options->sale_unit_label ?? $cart_item->options->unit;
+
                 SaleDetails::create([
                     'sale_id' => $sale->id,
                     'product_id' => $cart_item->id,
                     'product_name' => $cart_item->name,
                     'product_code' => $cart_item->options->code,
                     'quantity' => $cart_item->qty,
+                    'sale_unit' => $sale_unit_label,
+                    'sale_unit_multiplier' => $unit_multiplier,
+                    'base_quantity' => $cart_item->qty * $unit_multiplier,
                     'price' => $cart_item->price * 100,
                     'unit_price' => $cart_item->options->unit_price * 100,
                     'sub_total' => $cart_item->options->sub_total * 100,
@@ -207,7 +226,7 @@ class SaleController extends Controller
                 if ($request->status == 'Shipped' || $request->status == 'Completed') {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
-                        'product_quantity' => $product->product_quantity - $cart_item->qty
+                        'product_quantity' => $product->product_quantity - ($cart_item->qty * $unit_multiplier)
                     ]);
                 }
             }

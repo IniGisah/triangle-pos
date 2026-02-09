@@ -37,31 +37,36 @@ class PurchasePaymentsDataTable extends DataTable
             ->orderBy(5)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text(__('purchase::purchase.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text(__('purchase::purchase.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text(__('purchase::purchase.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text(__('purchase::purchase.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('date')
+                ->title(__('purchase::purchase.date'))
                 ->className('align-middle text-center'),
 
             Column::make('reference')
+                ->title(__('purchase::purchase.reference'))
                 ->className('align-middle text-center'),
 
             Column::computed('amount')
+                ->title(__('purchase::purchase.amount'))
                 ->className('align-middle text-center'),
 
             Column::make('payment_method')
+                ->title(__('purchase::purchase.payment_method'))
                 ->className('align-middle text-center'),
 
             Column::computed('action')
+                ->title(__('purchase::purchase.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->className('align-middle text-center'),

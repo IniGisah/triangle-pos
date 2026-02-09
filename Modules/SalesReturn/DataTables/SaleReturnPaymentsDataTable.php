@@ -38,31 +38,36 @@ class SaleReturnPaymentsDataTable extends DataTable
             ->orderBy(5)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text(__('salesreturn::salesreturn.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text(__('salesreturn::salesreturn.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text(__('salesreturn::salesreturn.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text(__('salesreturn::salesreturn.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('date')
+                ->title(__('salesreturn::salesreturn.date'))
                 ->className('align-middle text-center'),
 
             Column::make('reference')
+                ->title(__('salesreturn::salesreturn.reference'))
                 ->className('align-middle text-center'),
 
             Column::computed('amount')
+                ->title(__('salesreturn::salesreturn.amount'))
                 ->className('align-middle text-center'),
 
             Column::make('payment_method')
+                ->title(__('salesreturn::salesreturn.payment_method'))
                 ->className('align-middle text-center'),
 
             Column::computed('action')
+                ->title(__('salesreturn::salesreturn.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->className('align-middle text-center'),

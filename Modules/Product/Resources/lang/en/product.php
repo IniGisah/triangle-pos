@@ -1,0 +1,73 @@
+<?php
+
+return [
+    'home' => 'Home',
+
+    'products_title' => 'Products',
+    'products_breadcrumb' => 'Products',
+    'products_add' => 'Add Product',
+    'products_create_title' => 'Create Product',
+    'products_edit_title' => 'Edit Product',
+    'products_show_title' => 'Product Details',
+    'products_create_button' => 'Create Product',
+    'products_update_button' => 'Update Product',
+    'products_details' => 'Details',
+
+    'categories_title' => 'Product Categories',
+    'categories_breadcrumb' => 'Categories',
+    'categories_add' => 'Add Category',
+    'categories_create_title' => 'Create Category',
+    'categories_edit_title' => 'Edit Product Category',
+    'categories_update_button' => 'Update',
+    'categories_create_button' => 'Create',
+
+    'print_barcode_title' => 'Print Barcode',
+
+    'name' => 'Name',
+    'code' => 'Code',
+    'category' => 'Category',
+    'barcode_symbology' => 'Barcode Symbology',
+    'cost' => 'Cost',
+    'price' => 'Price',
+    'quantity' => 'Quantity',
+    'stock_worth' => 'Stock Worth',
+    'alert_quantity' => 'Alert Quantity',
+    'tax_percentage' => 'Tax (%)',
+    'tax_type' => 'Tax Type',
+    'tax_type_none' => 'None',
+    'tax_type_exclusive' => 'Exclusive',
+    'tax_type_inclusive' => 'Inclusive',
+    'unit' => 'Unit',
+    'note' => 'Note',
+    'action' => 'Action',
+    'details' => 'Details',
+    'image' => 'Image',
+    'product_images' => 'Product Images',
+    'products_count' => 'Products',
+
+    'wholesale_unit' => 'Wholesale Unit',
+    'wholesale_quantity' => 'Units per Wholesale',
+    'wholesale_quantity_placeholder' => 'e.g. 10',
+    'wholesale_price' => 'Wholesale Price',
+    'wholesale_price_placeholder' => 'Leave empty if not used',
+
+    'select_category' => 'Select Category',
+    'select_symbology' => 'Select Symbology',
+    'select_tax_type' => 'Select Tax Type',
+    'select_unit' => 'Select Unit',
+    'add' => 'Add',
+
+    'product_code_note' => 'NOTE: Product Code must be a number to generate barcodes!',
+    'price_label' => 'Price::',
+
+    'excel' => '<i class="bi bi-file-earmark-excel-fill"></i> Excel',
+    'print' => '<i class="bi bi-printer-fill"></i> Print',
+    'reset' => '<i class="bi bi-x-circle"></i> Reset',
+    'reload' => '<i class="bi bi-arrow-repeat"></i> Reload',
+    'confirm_delete' => 'Are you sure? It will delete the data permanently!',
+
+    'dropzone_remove' => "<i class='bi bi-x-circle text-danger'></i> remove",
+
+    'breadcrumb_products' => 'Products',
+    'breadcrumb_categories' => 'Categories',
+];

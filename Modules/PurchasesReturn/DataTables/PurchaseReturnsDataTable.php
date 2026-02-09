@@ -50,41 +50,48 @@ class PurchaseReturnsDataTable extends DataTable
             ->orderBy(8)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text(__('purchasesreturn::purchasesreturn.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text(__('purchasesreturn::purchasesreturn.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text(__('purchasesreturn::purchasesreturn.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text(__('purchasesreturn::purchasesreturn.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('reference')
+                ->title(__('purchasesreturn::purchasesreturn.reference'))
                 ->className('text-center align-middle'),
 
             Column::make('supplier_name')
-                ->title('Supplier')
+                ->title(__('purchasesreturn::purchasesreturn.supplier'))
                 ->className('text-center align-middle'),
 
             Column::computed('status')
+                ->title(__('purchasesreturn::purchasesreturn.status'))
                 ->className('text-center align-middle'),
 
             Column::computed('total_amount')
+                ->title(__('purchasesreturn::purchasesreturn.grand_total'))
                 ->className('text-center align-middle'),
 
             Column::computed('paid_amount')
+                ->title(__('purchasesreturn::purchasesreturn.paid_amount'))
                 ->className('text-center align-middle'),
 
             Column::computed('due_amount')
+                ->title(__('purchasesreturn::purchasesreturn.due_amount'))
                 ->className('text-center align-middle'),
 
             Column::computed('payment_status')
+                ->title(__('purchasesreturn::purchasesreturn.payment_status'))
                 ->className('text-center align-middle'),
 
             Column::computed('action')
+                ->title(__('purchasesreturn::purchasesreturn.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->className('text-center align-middle'),

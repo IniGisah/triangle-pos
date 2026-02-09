@@ -35,28 +35,32 @@ class ExpenseCategoriesDataTable extends DataTable
             ->orderBy(4)
             ->buttons(
                 Button::make('excel')
-                    ->text('<i class="bi bi-file-earmark-excel-fill"></i> Excel'),
+                    ->text(__('expense::expenses.excel')),
                 Button::make('print')
-                    ->text('<i class="bi bi-printer-fill"></i> Print'),
+                    ->text(__('expense::expenses.print')),
                 Button::make('reset')
-                    ->text('<i class="bi bi-x-circle"></i> Reset'),
+                    ->text(__('expense::expenses.reset')),
                 Button::make('reload')
-                    ->text('<i class="bi bi-arrow-repeat"></i> Reload')
+                    ->text(__('expense::expenses.reload'))
             );
     }
 
     protected function getColumns() {
         return [
             Column::make('category_name')
+                ->title(__('expense::expenses.category_name'))
                 ->addClass('text-center'),
 
             Column::make('category_description')
+                ->title(__('expense::expenses.category_description'))
                 ->addClass('text-center'),
 
             Column::make('expenses_count')
+                ->title(__('expense::expenses.category_expenses_count'))
                 ->addClass('text-center'),
 
             Column::computed('action')
+                ->title(__('expense::expenses.action'))
                 ->exportable(false)
                 ->printable(false)
                 ->addClass('text-center'),

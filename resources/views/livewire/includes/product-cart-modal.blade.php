@@ -31,25 +31,25 @@
                         </div>
                     @endif
                     <div class="form-group">
-                        <label>Discount Type <span class="text-danger">*</span></label>
+                        <label>{{ __('livewire.discount_modal.discount_type') }} <span class="text-danger">*</span></label>
                         <select wire:model.live="discount_type.{{ $cart_item->id }}" class="form-control" required>
-                            <option value="fixed">Fixed</option>
-                            <option value="percentage">Percentage</option>
+                            <option value="fixed">{{ __('livewire.discount_modal.fixed') }}</option>
+                            <option value="percentage">{{ __('livewire.discount_modal.percentage') }}</option>
                         </select>
                     </div>
                     <div class="form-group">
                         @if($discount_type[$cart_item->id] == 'percentage')
-                            <label>Discount(%) <span class="text-danger">*</span></label>
+                            <label>{{ __('livewire.discount_modal.discount_percent') }} <span class="text-danger">*</span></label>
                             <input wire:model="item_discount.{{ $cart_item->id }}" type="number" class="form-control" value="{{ $item_discount[$cart_item->id] }}" min="0" max="100">
                         @elseif($discount_type[$cart_item->id] == 'fixed')
-                            <label>Discount <span class="text-danger">*</span></label>
+                            <label>{{ __('livewire.discount_modal.discount') }} <span class="text-danger">*</span></label>
                             <input wire:model="item_discount.{{ $cart_item->id }}" type="number" class="form-control" value="{{ $item_discount[$cart_item->id] }}">
                         @endif
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button wire:click="setProductDiscount('{{ $cart_item->rowId }}', {{ $cart_item->id }})" type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('livewire.common.close') }}</button>
+                    <button wire:click="setProductDiscount('{{ $cart_item->rowId }}', {{ $cart_item->id }})" type="button" class="btn btn-primary">{{ __('livewire.common.save_changes') }}</button>
                 </div>
             </div>
         </div>
