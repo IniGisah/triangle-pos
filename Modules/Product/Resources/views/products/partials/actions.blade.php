@@ -11,10 +11,9 @@
 @can('delete_products')
 <button id="delete" class="btn btn-danger btn-sm" onclick="
     event.preventDefault();
-    if (confirm("{{ __('product::product.confirm_delete') }}")) {
-        document.getElementById('destroy{{ $data->id }}').submit()
-    }
-    ">
+    if (confirm('{{ __('product::product.confirm_delete') }}')) {
+        document.getElementById('destroy{{ $data->id }}').submit();
+    }">
     <i class="bi bi-trash"></i>
     <form id="destroy{{ $data->id }}" class="d-none" action="{{ route('products.destroy', $data->id) }}" method="POST">
         @csrf
