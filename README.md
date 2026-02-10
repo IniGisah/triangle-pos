@@ -4,6 +4,13 @@
     <img src="public/images/logo-dark.png" alt="App Logo">
 </picture>
 
+# Triangle POS
+
+A comprehensive Point of Sale (POS) system built with Laravel and modern web technologies.
+
+**Origin Repository:** https://github.com/FahimAnzamDip/triangle-pos
+
+
 > **Important Note:** This Project is ready for Production. But use code from main branch only. If you find any bug or have any suggestion please create an Issue.
 
 # Local Installation
@@ -35,7 +42,6 @@ This will start the application along with the mysql database using docker compo
 
 ## Demo
 ![Triangle POS](public/images/screenshot.jpg)
-**Live Demo:** will update soon
 
 ## Triangle POS Features
 
@@ -53,6 +59,13 @@ This will start the application along with the mysql database using docker compo
 - **Unit Settings**
 - **System Settings**
 - **Reports**
+- **English and Indonesian Language with switcher**
+
+## TODO
+
+- **Wholesale and retail products**
+- **Employee data based on user**
+
 
 # License
 **[Creative Commons Attribution 4.0	cc-by-4.0](https://creativecommons.org/licenses/by/4.0/)**
