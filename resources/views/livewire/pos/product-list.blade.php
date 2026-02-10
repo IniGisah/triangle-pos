@@ -13,7 +13,7 @@
                         <div class="card border-0 shadow h-100">
                             <div class="position-relative">
                                 <img height="200" src="{{ $product->getFirstMediaUrl('images') }}" class="card-img-top" alt="Product Image">
-                                <div class="badge badge-info mb-3 position-absolute" style="left:10px;top: 10px;">{{ __('livewire.product_list.stock_badge', ['stock' => $product->product_quantity]) }}</div>
+                                <div class="badge badge-info mb-3 position-absolute" style="left:10px;top: 10px;">{{ $product->stock_display ?? $product->product_quantity }}</div>
                             </div>
                             <div class="card-body">
                                 <div class="mb-2">

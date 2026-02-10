@@ -15,7 +15,8 @@ Route::get('/', function () {
 Route::post('/language', 'LanguageController@switch')
     ->name('language.switch');
 
-Auth::routes(['register' => false]);
+// Enable default auth routes including registration
+Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index')

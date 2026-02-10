@@ -44,6 +44,7 @@
                         @if($cart_items->isNotEmpty())
                             @foreach($cart_items as $cart_item)
                                 <tr>
+                                    {{-- @php dd( $cart_item->options );@endphp --}}
                                     <td class="align-middle">
                                         {{ $cart_item->name }} <br>
                                         <span class="badge badge-success">

@@ -75,6 +75,7 @@ return [
     'retail_label' => 'Retail (:unit)',
     'wholesale_label' => 'Wholesale (:unit)',
     'wholesale_hint' => '1 :pack = :qty :unit',
+    'retail_unit_default' => 'pcs',
     'wholesale_unit_default' => 'pack',
 
     // Statuses

@@ -12,6 +12,9 @@ return [
     'products_create_button' => 'Buat Produk',
     'products_update_button' => 'Perbarui Produk',
     'products_details' => 'Detail',
+    'section_pricing_tax' => 'Harga & Pajak',
+    'section_units_packaging' => 'Satuan & Kemasan',
+    'section_inventory_alerts' => 'Stok & Peringatan',
 
     'categories_title' => 'Kategori Produk',
     'categories_breadcrumb' => 'Kategori',
@@ -50,6 +53,10 @@ return [
     'wholesale_quantity_placeholder' => 'mis: 10',
     'wholesale_price' => 'Harga Grosir',
     'wholesale_price_placeholder' => 'Biarkan kosong jika tidak dipakai',
+    'wholesale_stock' => 'Stok Grosir',
+    'retail_stock' => 'Stok Eceran (Satuan Lepas)',
+    'retail_unit' => 'Satuan Eceran',
+    'retail_price' => 'Harga Eceran',
 
     'select_category' => 'Pilih Kategori',
     'select_symbology' => 'Pilih Simbol',

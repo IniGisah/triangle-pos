@@ -2,6 +2,7 @@
 
 namespace Modules\SalesReturn\Http\Controllers;
 
+use App\Services\ProductInventoryService;
 use Modules\SalesReturn\DataTables\SaleReturnsDataTable;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Routing\Controller;
@@ -162,9 +163,10 @@ class SalesReturnController extends Controller
             foreach ($sale_return->saleReturnDetails as $sale_return_detail) {
                 if ($sale_return->status == 'Completed') {
                     $product = Product::findOrFail($sale_return_detail->product_id);
-                    $product->update([
-                        'product_quantity' => $product->product_quantity - $sale_return_detail->quantity
-                    ]);
+                    $inventoryService = new ProductInventoryService();
+                    
+                    // Deduct stock when deleting completed return
+                    $inventoryService->deductStock($product, $sale_return_detail->quantity, 'retail');
                 }
                 $sale_return_detail->delete();
             }
@@ -205,9 +207,15 @@ class SalesReturnController extends Controller
 
                 if ($request->status == 'Completed') {
                     $product = Product::findOrFail($cart_item->id);
-                    $product->update([
-                        'product_quantity' => $product->product_quantity + $cart_item->qty
-                    ]);
+                    $inventoryService = new ProductInventoryService();
+                    
+                    // If return is wholesale, add wholesale; if retail, add retail pieces
+                    $unitType = $cart_item->options->sale_unit ?? 'retail';
+                    $quantityToAdd = $unitType === 'wholesale'
+                        ? $cart_item->qty
+                        : $cart_item->qty * ($cart_item->options->unit_multiplier ?? 1);
+
+                    $inventoryService->addStock($product, $quantityToAdd, $unitType === 'wholesale' ? 'wholesale' : 'retail');
                 }
             }
 

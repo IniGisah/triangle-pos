@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Pos;
 
+use App\Services\ProductInventoryService;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Livewire\Component;
 use Modules\Product\Entities\Product;
@@ -25,6 +26,7 @@ class Checkout extends Component
     public $data;
     public $customer_id;
     public $total_amount;
+    public $stock_breakdown;
 
     public function mount($cartInstance, $customers) {
         $this->cart_instance = $cartInstance;
@@ -38,7 +40,15 @@ class Checkout extends Component
         $this->item_discount = [];
         $this->sale_unit = [];
         $this->unit_multiplier = [];
+        $this->stock_breakdown = [];
         $this->total_amount = 0;
+    }
+
+    /**
+     * Get inventory service instance
+     */
+    protected function getInventoryService() {
+        return new ProductInventoryService();
     }
 
     public function hydrate() {
@@ -82,7 +92,14 @@ class Checkout extends Component
             return;
         }
 
-        $pricing = $this->calculate($product);
+        // Treat product_unit as wholesale and retail_unit as piece; pick default sale unit based on pricing availability
+        $retailUnitLabel = $product['retail_unit'] ?? __('sale::sale.retail_unit_default');
+        $wholesaleUnitLabel = $product['product_unit'] ?? $retailUnitLabel;
+        $product['retail_unit_label'] = $retailUnitLabel;
+        $product['wholesale_unit_label'] = $wholesaleUnitLabel;
+        $defaultSaleUnit = !empty($product['retail_price']) ? 'retail' : 'wholesale';
+
+        $pricing = $this->calculate($product, $defaultSaleUnit);
 
         $cart->add([
             'id'      => $product['id'],
@@ -96,23 +113,30 @@ class Checkout extends Component
                 'sub_total'             => $pricing['sub_total'],
                 'code'                  => $product['product_code'],
                 'stock'                 => $product['product_quantity'],
-                'unit'                  => $product['product_unit'],
+                'unit'                  => $retailUnitLabel,
+                'retail_unit'           => $retailUnitLabel,
                 'product_tax'           => $pricing['product_tax'],
                 'unit_price'            => $pricing['unit_price'],
-                'sale_unit'             => 'retail',
+                'sale_unit'             => $defaultSaleUnit,
                 'sale_unit_label'       => $pricing['sale_unit_label'],
                 'unit_multiplier'       => $pricing['unit_multiplier'],
-                'wholesale_unit'        => $product['wholesale_unit'] ?? null,
+                'wholesale_unit'        => $wholesaleUnitLabel,
                 'wholesale_quantity'    => $product['wholesale_quantity'] ?? null,
-                'wholesale_price'       => $product['wholesale_price'] ?? null,
+                'wholesale_price'       => $product['wholesale_price'] ?? $product['product_price'],
+                'retail_price'          => $product['retail_price'],
             ]
         ]);
 
-        $this->check_quantity[$product['id']] = $product['product_quantity'];
+        // Use dual inventory for stock tracking
+        $productModel = Product::findOrFail($product['id']);
+        $breakdown = $this->getInventoryService()->getStockBreakdown($productModel);
+        
+        $this->check_quantity[$product['id']] = $breakdown['total_quantity'];
+        $this->stock_breakdown[$product['id']] = $breakdown['formatted'];
         $this->quantity[$product['id']] = 1;
         $this->discount_type[$product['id']] = 'fixed';
         $this->item_discount[$product['id']] = 0;
-        $this->sale_unit[$product['id']] = 'retail';
+        $this->sale_unit[$product['id']] = $defaultSaleUnit;
         $this->unit_multiplier[$product['id']] = $pricing['unit_multiplier'];
         $this->total_amount = $this->calculateTotal();
     }
@@ -131,10 +155,19 @@ class Checkout extends Component
 
     public function updateQuantity($row_id, $product_id) {
         $current_multiplier = $this->unit_multiplier[$product_id] ?? 1;
+        $sale_unit = $this->sale_unit[$product_id] ?? 'retail';
+        $product = Product::findOrFail($product_id);
 
-        if ($this->check_quantity[$product_id] < ($this->quantity[$product_id] * $current_multiplier)) {
+        // Validate stock availability using dual inventory
+        $hasStock = false;
+        if ($sale_unit === 'wholesale') {
+            $hasStock = $this->getInventoryService()->hasEnoughStock($product, $this->quantity[$product_id], 'wholesale');
+        } else {
+            $hasStock = $this->getInventoryService()->hasEnoughStock($product, $this->quantity[$product_id] * $current_multiplier, 'retail');
+        }
+
+        if (!$hasStock) {
             session()->flash('message', __('livewire.alerts.quantity_not_available'));
-
             return;
         }
 
@@ -148,6 +181,7 @@ class Checkout extends Component
                 'code'                  => $cart_item->options->code,
                 'stock'                 => $cart_item->options->stock,
                 'unit'                  => $cart_item->options->unit,
+                'retail_unit'           => $cart_item->options->retail_unit ?? $cart_item->options->unit,
                 'product_tax'           => $cart_item->options->product_tax,
                 'unit_price'            => $cart_item->options->unit_price,
                 'sale_unit'             => $cart_item->options->sale_unit,
@@ -156,6 +190,7 @@ class Checkout extends Component
                 'wholesale_unit'        => $cart_item->options->wholesale_unit,
                 'wholesale_quantity'    => $cart_item->options->wholesale_quantity,
                 'wholesale_price'       => $cart_item->options->wholesale_price,
+                'retail_price'          => $cart_item->options->retail_price ?? null,
                 'product_discount'      => $cart_item->options->product_discount,
                 'product_discount_type' => $cart_item->options->product_discount_type,
             ]
@@ -197,18 +232,25 @@ class Checkout extends Component
     }
 
     public function calculate($product, $saleUnit = 'retail') {
+        if (!is_array($product)) {
+            $product = $product->toArray();
+        }
+
         $price = 0;
         $unit_price = 0;
         $product_tax = 0;
         $sub_total = 0;
-        $unit_multiplier = 1;
-        $sale_unit_label = $product['product_unit'];
-        $product_price = $product['product_price'];
+        $wholesaleQty = $product['wholesale_quantity'] ?? 0;
+        $retailUnitLabel = $product['retail_unit'] ?? $product['retail_unit_label'] ?? __('sale::sale.retail_unit_default');
+        $wholesaleUnitLabel = $product['product_unit'] ?? $product['wholesale_unit_label'] ?? $retailUnitLabel;
 
-        if ($saleUnit === 'wholesale' && !empty($product['wholesale_price']) && !empty($product['wholesale_quantity'])) {
-            $product_price = $product['wholesale_price'];
-            $unit_multiplier = $product['wholesale_quantity'];
-            $sale_unit_label = $product['wholesale_unit'] ?? $sale_unit_label;
+        $sale_unit_label = $saleUnit === 'wholesale' ? $wholesaleUnitLabel : $retailUnitLabel;
+        $unit_multiplier = ($saleUnit === 'wholesale' && $wholesaleQty > 0) ? $wholesaleQty : 1;
+
+        if ($saleUnit === 'wholesale') {
+            $product_price = $product['wholesale_price'] ?? $product['product_price'];
+        } else {
+            $product_price = $product['retail_price'] ?? $product['product_price'];
         }
 
         if ($product['product_tax_type'] == 1) {
@@ -243,7 +285,8 @@ class Checkout extends Component
             'sub_total'             => $cart_item->price * $cart_item->qty,
             'code'                  => $cart_item->options->code,
             'stock'                 => $cart_item->options->stock,
-            'unit'                 => $cart_item->options->unit,
+            'unit'                  => $cart_item->options->unit,
+            'retail_unit'           => $cart_item->options->retail_unit ?? $cart_item->options->unit,
             'product_tax'           => $cart_item->options->product_tax,
             'unit_price'            => $cart_item->options->unit_price,
             'sale_unit'             => $cart_item->options->sale_unit,
@@ -252,20 +295,31 @@ class Checkout extends Component
             'wholesale_unit'        => $cart_item->options->wholesale_unit,
             'wholesale_quantity'    => $cart_item->options->wholesale_quantity,
             'wholesale_price'       => $cart_item->options->wholesale_price,
+            'retail_price'          => $cart_item->options->retail_price ?? null,
             'product_discount'      => $discount_amount,
             'product_discount_type' => $this->discount_type[$product_id],
         ]]);
     }
 
     public function changeSaleUnit($row_id, $product_id, $sale_unit) {
-        $product = Product::findOrFail($product_id)->toArray();
+        $product = Product::findOrFail($product_id);
+        $productArray = $product->toArray();
+        $productArray['retail_unit_label'] = $productArray['retail_unit'] ?? __('sale::sale.retail_unit_default');
+        $productArray['wholesale_unit_label'] = $productArray['product_unit'] ?? $productArray['wholesale_unit'] ?? $productArray['retail_unit_label'];
 
-        $pricing = $this->calculate($product, $sale_unit);
-        $requested_base = $this->quantity[$product_id] * $pricing['unit_multiplier'];
+        $pricing = $this->calculate($productArray, $sale_unit);
+        $requested_quantity = $this->quantity[$product_id];
 
-        if ($this->check_quantity[$product_id] < $requested_base) {
+        // Validate stock availability for the new unit type
+        $hasStock = false;
+        if ($sale_unit === 'wholesale') {
+            $hasStock = $this->getInventoryService()->hasEnoughStock($product, $requested_quantity, 'wholesale');
+        } else {
+            $hasStock = $this->getInventoryService()->hasEnoughStock($product, $requested_quantity * $pricing['unit_multiplier'], 'retail');
+        }
+
+        if (!$hasStock) {
             session()->flash('message', __('livewire.alerts.quantity_not_available'));
-
             return;
         }
 
@@ -282,17 +336,26 @@ class Checkout extends Component
                 'code'                  => $cart_item->options->code,
                 'stock'                 => $cart_item->options->stock,
                 'unit'                  => $cart_item->options->unit,
+                'retail_unit'           => $cart_item->options->retail_unit ?? $productArray['retail_unit_label'],
                 'product_tax'           => $pricing['product_tax'],
                 'unit_price'            => $pricing['unit_price'],
                 'sale_unit'             => $sale_unit,
                 'sale_unit_label'       => $pricing['sale_unit_label'],
                 'unit_multiplier'       => $pricing['unit_multiplier'],
-                'wholesale_unit'        => $product['wholesale_unit'] ?? null,
-                'wholesale_quantity'    => $product['wholesale_quantity'] ?? null,
-                'wholesale_price'       => $product['wholesale_price'] ?? null,
+                'wholesale_unit'        => $productArray['product_unit'] ?? $productArray['wholesale_unit'] ?? null,
+                'wholesale_quantity'    => $productArray['wholesale_quantity'] ?? null,
+                'wholesale_price'       => $productArray['wholesale_price'] ?? null,
+                'retail_price'          => $productArray['retail_price'] ?? ($cart_item->options->retail_price ?? null),
                 'product_discount'      => $cart_item->options->product_discount,
                 'product_discount_type' => $cart_item->options->product_discount_type,
             ]
         ]);
+    }
+
+    /**
+     * Get formatted stock breakdown for display
+     */
+    public function getStockDisplay($product_id) {
+        return $this->stock_breakdown[$product_id] ?? '';
     }
 }

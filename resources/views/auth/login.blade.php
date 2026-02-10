@@ -9,113 +9,150 @@
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
-    <!-- CoreUI CSS -->
+    <!-- CoreUI / App CSS -->
     <link rel="stylesheet" href="{{ mix('css/app.css') }}" crossorigin="anonymous">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <style>
+        /* Inline styles to keep changes within Blade only */
+        body.login-bg {
+            background: linear-gradient(135deg,#0f172a 0%, #0b1220 50%, #081028 100%);
+            color: #eef2ff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-attachment: fixed;
+        }
+        .login-card {
+            max-width: 420px;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.04);
+            box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .login-card .card-body { padding: 2.25rem; }
+        .brand-logo { width: 92px; height: 92px; object-fit: contain; }
+        .brand-area { text-align: center; margin-bottom: 1rem; }
+        .form-heading { color: #e6eef8; margin-bottom: .25rem; }
+        .form-sub { color: rgba(230,238,248,0.7); margin-bottom: 1rem; }
+        .social-btn { width: 48%; }
+        @media (max-width: 576px) {
+            .login-card { margin: 1rem; }
+        }
+    </style>
 </head>
 
-<body class="c-app flex-row align-items-center">
-<div class="container">
-    <div class="row mb-3">
-        <div class="col-12 d-flex justify-content-center">
-            <img width="200" src="{{ asset('images/logo-dark.png') }}" alt="Logo">
+<body class="login-bg c-app">
+
+<div class="login-card">
+    <div class="card-body">
+        <div class="brand-area">
+            <img src="{{ asset('images/logo-dark.png') }}" alt="Logo" class="brand-logo mb-2">
+            <div><strong>{{ config('app.name') }}</strong></div>
         </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            @if(Session::has('account_deactivated'))
-                <div class="alert alert-danger" role="alert">
-                    {{ Session::get('account_deactivated') }}
-                </div>
-            @endif
-            <div class="card p-4 border-0 shadow-sm">
-                <div class="card-body">
-                    <form id="login" method="post" action="{{ url('/login') }}">
-                        @csrf
-                        <h1>Login</h1>
-                        <p class="text-muted">Sign In to your account</p>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                      <i class="bi bi-person"></i>
-                                    </span>
-                            </div>
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
-                                   name="email" value="{{ old('email') }}"
-                                   placeholder="Email">
-                            @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="input-group mb-4">
-                            <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                      <i class="bi bi-lock"></i>
-                                    </span>
-                            </div>
-                            <input id="password" type="password"
-                                   class="form-control @error('password') is-invalid @enderror"
-                                   placeholder="Password" name="password">
-                            @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="row">
-                            <div class="col-4">
-                                <button id="submit" class="btn btn-primary px-4 d-flex align-items-center"
-                                        type="submit">
-                                    Login
-                                    <div id="spinner" class="spinner-border text-info" role="status"
-                                         style="height: 20px;width: 20px;margin-left: 5px;display: none;">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col-8 text-right">
-                                <a class="btn btn-link px-0" href="{{ route('password.request') }}">
-                                    Forgot password?
-                                </a>
-                            </div>
-                        </div>
-                    </form>
+
+        @if(Session::has('account_deactivated'))
+            <div class="alert alert-danger" role="alert">
+                {{ Session::get('account_deactivated') }}
+            </div>
+        @endif
+
+        <h4 class="form-heading">Welcome back</h4>
+        <p class="form-sub">Sign in to continue to {{ config('app.name') }}</p>
+
+        <form id="login" method="post" action="{{ url('/login') }}">
+            @csrf
+
+            <div class="mb-3">
+                <label for="email" class="form-label visually-hidden">Email</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    </div>
+                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" placeholder="Email" required autofocus aria-label="Email">
+                    @error('email')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
-            <p class="text-center mt-5 lead">
-                Developed By
-                <a href="https://fahimanzam.netlify.app" class="font-weight-bold text-primary">Fahim Anzam Dip</a>
-            </p>
-        </div>
+            <div class="mb-3">
+                <label for="password" class="form-label visually-hidden">Password</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    </div>
+                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" name="password" required aria-label="Password">
+                    @error('password')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="remember">Remember me</label>
+                </div>
+                <div>
+                    <a class="text-decoration-none text-light" href="{{ route('password.request') }}">Forgot password?</a>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center">
+                <button id="submit" class="btn btn-primary w-100 d-flex justify-content-center align-items-center" type="submit">
+                    <span>Sign in</span>
+                    <span id="spinner" class="spinner-border text-light ms-2" role="status" style="height: 20px;width: 20px;display: none;">
+                        <span class="sr-only">Loading...</span>
+                    </span>
+                </button>
+            </div>
+
+            <div class="text-center mt-3">
+                <small class="text-muted"><a href="{{ route('register') }}" class="text-decoration-underline text-light">Belum punya akun ? Register</a></small>
+                <!-- <div class="d-flex justify-content-center gap-2 mt-2">
+                    <button type="button" class="btn btn-outline-light social-btn"><i class="bi bi-google"></i></button>
+                    <button type="button" class="btn btn-outline-light social-btn"><i class="bi bi-github"></i></button>
+                </div> -->
+            </div>
+
+        </form>
+
     </div>
 </div>
 
-<!-- CoreUI -->
+<!-- CoreUI / App JS -->
 <script src="{{ mix('js/app.js') }}" defer></script>
 <script>
-    let login = document.getElementById('login');
-    let submit = document.getElementById('submit');
-    let email = document.getElementById('email');
-    let password = document.getElementById('password');
-    let spinner = document.getElementById('spinner')
+    // Preserve existing submit UX (disable & show spinner)
+    document.addEventListener('DOMContentLoaded', function () {
+        let login = document.getElementById('login');
+        let submit = document.getElementById('submit');
+        let email = document.getElementById('email');
+        let password = document.getElementById('password');
+        let spinner = document.getElementById('spinner');
 
-    login.addEventListener('submit', (e) => {
-        submit.disabled = true;
-        email.readonly = true;
-        password.readonly = true;
+        if (!login) return;
 
-        spinner.style.display = 'block';
+        login.addEventListener('submit', (e) => {
+            submit.disabled = true;
+            email.readOnly = true;
+            password.readOnly = true;
+            spinner.style.display = 'inline-block';
+        });
 
-        login.submit();
+        // Fallback in case login fails quickly
+        setTimeout(() => {
+            if (submit) submit.disabled = false;
+            if (email) email.readOnly = false;
+            if (password) password.readOnly = false;
+            if (spinner) spinner.style.display = 'none';
+        }, 3000);
     });
-
-    setTimeout(() => {
-        submit.disabled = false;
-        email.readonly = false;
-        password.readonly = false;
-
-        spinner.style.display = 'none';
-    }, 3000);
 </script>
 
 </body>

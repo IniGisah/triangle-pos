@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Pos;
 
+use App\Services\ProductInventoryService;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Modules\Product\Entities\Product;
@@ -27,11 +28,21 @@ class ProductList extends Component
     }
 
     public function render() {
-        return view('livewire.pos.product-list', [
-            'products' => Product::when($this->category_id, function ($query) {
+        $inventoryService = new ProductInventoryService();
+
+        $products = Product::when($this->category_id, function ($query) {
                 return $query->where('category_id', $this->category_id);
             })
-            ->paginate($this->limit)
+            ->paginate($this->limit);
+
+        // Add stock breakdown to each product
+        foreach ($products as $product) {
+            $breakdown = $inventoryService->getStockBreakdown($product);
+            $product->stock_display = $breakdown['formatted'];
+        }
+
+        return view('livewire.pos.product-list', [
+            'products' => $products
         ]);
     }
 

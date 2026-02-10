@@ -12,17 +12,20 @@
             </button>
         </div>
     </div>
+        {{-- @php dd( $cart_item->options->wholesale_quantity );@endphp --}}
 
-    @if(!empty($cart_item->options->wholesale_quantity) && !empty($cart_item->options->wholesale_price))
+
+    @if(($cart_item->options->wholesale_quantity ?? 0) > 0 && ($cart_item->options->retail_price ?? 0) > 0)
         <div class="mt-2 w-100">
             @php
-                $packUnit = $cart_item->options->wholesale_unit ?? __('sale::sale.wholesale_unit_default');
+                $retailUnit = $cart_item->options->unit ?? __('sale::sale.retail_unit_default');
+                $wholesaleUnit = $cart_item->options->wholesale_unit ?? ($cart_item->options->product_unit ?? __('sale::sale.wholesale_unit_default'));
             @endphp
             <select wire:model.live="sale_unit.{{ $cart_item->id }}" wire:change="changeSaleUnit('{{ $cart_item->rowId }}', {{ $cart_item->id }}, $event.target.value)" class="form-control form-control-sm">
-                <option value="retail">{{ __('sale::sale.retail_label', ['unit' => $cart_item->options->unit]) }}</option>
-                <option value="wholesale">{{ __('sale::sale.wholesale_label', ['unit' => $packUnit]) }}</option>
+                <option value="retail">{{ __('sale::sale.retail_label', ['unit' => $retailUnit]) }}</option>
+                <option value="wholesale">{{ __('sale::sale.wholesale_label', ['unit' => $wholesaleUnit]) }}</option>
             </select>
-            <small class="text-muted">{{ __('sale::sale.wholesale_hint', ['pack' => $packUnit, 'qty' => $cart_item->options->wholesale_quantity, 'unit' => $cart_item->options->unit]) }}</small>
+            <small class="text-muted">{{ __('sale::sale.wholesale_hint', ['pack' => $wholesaleUnit, 'qty' => $cart_item->options->wholesale_quantity, 'unit' => $retailUnit]) }}</small>
         </div>
     @endif
 </div>

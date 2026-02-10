@@ -2,6 +2,7 @@
 
 namespace Modules\Purchase\Http\Controllers;
 
+use App\Services\ProductInventoryService;
 use Modules\Purchase\DataTables\PurchaseDataTable;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Routing\Controller;
@@ -160,9 +161,10 @@ class PurchaseController extends Controller
             foreach ($purchase->purchaseDetails as $purchase_detail) {
                 if ($purchase->status == 'Completed') {
                     $product = Product::findOrFail($purchase_detail->product_id);
-                    $product->update([
-                        'product_quantity' => $product->product_quantity - $purchase_detail->quantity
-                    ]);
+                    $inventoryService = new ProductInventoryService();
+                    
+                    // Deduct stock when deleting completed purchase
+                    $inventoryService->deductStock($product, $purchase_detail->quantity, 'retail');
                 }
                 $purchase_detail->delete();
             }
@@ -203,9 +205,10 @@ class PurchaseController extends Controller
 
                 if ($request->status == 'Completed') {
                     $product = Product::findOrFail($cart_item->id);
-                    $product->update([
-                        'product_quantity' => $product->product_quantity + $cart_item->qty
-                    ]);
+                    $inventoryService = new ProductInventoryService();
+                    
+                    // Existing quantity/unit is wholesale; add stock as wholesale units
+                    $inventoryService->addStock($product, $cart_item->qty, 'wholesale');
                 }
             }
 

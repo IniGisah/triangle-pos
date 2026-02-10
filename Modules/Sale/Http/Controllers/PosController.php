@@ -2,6 +2,7 @@
 
 namespace Modules\Sale\Http\Controllers;
 
+use App\Services\ProductInventoryService;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -59,9 +60,12 @@ class PosController extends Controller
                 'discount_amount' => Cart::instance('sale')->discount() * 100,
             ]);
 
+            $inventoryService = new ProductInventoryService();
+
             foreach (Cart::instance('sale')->content() as $cart_item) {
                 $unit_multiplier = $cart_item->options->unit_multiplier ?? 1;
                 $sale_unit_label = $cart_item->options->sale_unit_label ?? $cart_item->options->unit;
+                $sale_unit_type = $cart_item->options->sale_unit ?? 'retail';
 
                 SaleDetails::create([
                     'sale_id' => $sale->id,
@@ -80,10 +84,21 @@ class PosController extends Controller
                     'product_tax_amount' => $cart_item->options->product_tax * 100,
                 ]);
 
+                // Deduct stock using inventory service with auto box-breaking
                 $product = Product::findOrFail($cart_item->id);
-                $product->update([
-                    'product_quantity' => $product->product_quantity - ($cart_item->qty * $unit_multiplier)
-                ]);
+                try {
+                    if ($sale_unit_type === 'wholesale') {
+                        // Deduct wholesale units (boxes)
+                        $inventoryService->deductStock($product, $cart_item->qty, 'wholesale');
+                    } else {
+                        // Deduct retail units (pieces) with auto box-breaking
+                        $inventoryService->deductStock($product, $cart_item->qty * $unit_multiplier, 'retail');
+                    }
+                } catch (\Exception $e) {
+                    // Log error and throw exception to rollback transaction
+                    \Log::error("Stock deduction failed for product {$product->id}: " . $e->getMessage());
+                    throw $e;
+                }
             }
 
             Cart::instance('sale')->destroy();

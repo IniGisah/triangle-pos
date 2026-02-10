@@ -115,6 +115,7 @@ class ProductCart extends Component
                 'wholesale_unit'        => $product['wholesale_unit'] ?? null,
                 'wholesale_quantity'    => $product['wholesale_quantity'] ?? null,
                 'wholesale_price'       => $product['wholesale_price'] ?? null,
+                'retail_price'          => $product['product_price'],
             ]
         ]);
 

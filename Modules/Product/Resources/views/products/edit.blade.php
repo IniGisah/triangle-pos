@@ -140,13 +140,36 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="wholesale_quantity">{{ __('product::product.wholesale_quantity') }}</label>
-                                        <input type="number" class="form-control" name="wholesale_quantity" value="{{ $product->wholesale_quantity }}" min="1" placeholder="{{ __('product::product.wholesale_quantity_placeholder') }}">
+                                        <input type="number" class="form-control" name="wholesale_quantity" id="wholesale_quantity" value="{{ $product->wholesale_quantity }}" min="1" placeholder="{{ __('product::product.wholesale_quantity_placeholder') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="wholesale_price">{{ __('product::product.wholesale_price') }}</label>
                                         <input id="wholesale_price" type="text" class="form-control" min="0" name="wholesale_price" value="{{ $product->wholesale_price }}" placeholder="{{ __('product::product.wholesale_price_placeholder') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="wholesale_unit_stock">{{ __('product::product.wholesale_stock') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="Number of wholesale units in stock (e.g., boxes, cartons)"></i></label>
+                                        <input type="number" class="form-control" name="wholesale_unit_stock" id="wholesale_unit_stock" value="{{ $product->wholesale_unit_stock ?? 0 }}" min="0" placeholder="Number of boxes/cartons">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="retail_unit_stock">{{ __('product::product.retail_stock') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="Number of loose retail units in stock (e.g., pieces)"></i></label>
+                                        <input type="number" class="form-control" name="retail_unit_stock" id="retail_unit_stock" value="{{ $product->retail_unit_stock ?? 0 }}" min="0" placeholder="Number of loose pieces">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <div class="alert alert-info" id="stock_total_display">
+                                        <strong>Total Stock:</strong> <span id="stock_total_text">0</span>
                                     </div>
                                 </div>
                             </div>
@@ -246,6 +269,38 @@
             $('#product_cost').maskMoney('mask');
             $('#product_price').maskMoney('mask');
             $('#wholesale_price').maskMoney('mask');
+
+            // Calculate and display total stock
+            function updateStockTotal() {
+                var wholesaleStock = parseInt($('#wholesale_unit_stock').val()) || 0;
+                var retailStock = parseInt($('#retail_unit_stock').val()) || 0;
+                var wholesaleQty = parseInt($('#wholesale_quantity').val()) || 0;
+                var wholesaleUnit = $('#wholesale_unit option:selected').text().split('|')[0].trim() || 'boxes';
+                var retailUnit = $('#product_unit option:selected').text().split('|')[0].trim() || 'pcs';
+
+                var totalInRetailUnits = (wholesaleStock * wholesaleQty) + retailStock;
+                
+                var displayText = '';
+                if (wholesaleStock > 0 && wholesaleQty > 0) {
+                    displayText = wholesaleStock + ' ' + wholesaleUnit + ' + ' + retailStock + ' ' + retailUnit + ' = ' + totalInRetailUnits + ' ' + retailUnit + ' total';
+                } else {
+                    displayText = retailStock + ' ' + retailUnit;
+                }
+
+                $('#stock_total_text').text(displayText);
+                $('#stock_total_display').show();
+
+                // Also update the legacy product_quantity field to maintain backward compatibility
+                $('#product_quantity').val(totalInRetailUnits);
+            }
+
+            // Listen to changes in inventory fields
+            $('#wholesale_unit_stock, #retail_unit_stock, #wholesale_quantity, #wholesale_unit, #product_unit').on('change keyup', function() {
+                updateStockTotal();
+            });
+
+            // Initialize on page load
+            updateStockTotal();
 
             $('#product-form').submit(function () {
                 var product_cost = $('#product_cost').maskMoney('unmasked')[0];

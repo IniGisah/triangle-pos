@@ -1,0 +1,110 @@
+/* Product table & filter styles (moved from inline) */
+
+/* ✨ Modern DataTable styling */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+    overflow: hidden;
+}
+
+.card-header {
+    background: linear-gradient(90deg, #fbfbff, #ffffff);
+    border-bottom: 1px solid #eef2ff;
+    padding: 1rem;
+}
+
+.card-header h5 { margin-bottom: 0; }
+
+.table.dataTable thead th {
+    background: linear-gradient(90deg, #f6f7fb, #ffffff);
+    font-weight: 700;
+    color: #374151;
+}
+
+.table.dataTable tbody tr:hover {
+    background: linear-gradient(90deg, rgba(99,102,241,0.04), transparent);
+    transform: translateX(2px);
+    transition: all .12s ease;
+}
+
+.table.dataTable td, .table.dataTable th { vertical-align: middle; }
+
+/* Buttons */
+.btn-group .btn, .dt-button, .dt-buttons .btn {
+    border-radius: 8px;
+    border: 1px solid #e6e6f0;
+    background: #fff;
+    color: #374151;
+    padding: .45rem .75rem;
+    margin-right: .25rem;
+    box-shadow: none;
+}
+
+.btn-group .btn:hover, .dt-button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(99,102,241,0.08); }
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    border-radius: 8px;
+    padding: 6px 10px;
+    border: 1px solid #eef2ff;
+    margin: 0 4px;
+    background: #fff;
+    color: #374151;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #6366f1;
+    color: #fff !important;
+    border-color: #6366f1;
+    box-shadow: 0 8px 24px rgba(99,102,241,0.12);
+}
+
+/* Search input */
+.input-group .form-control {
+    border-left: 0;
+    border-radius: 8px;
+    box-shadow: none;
+    border: 1px solid #e6e6f0;
+}
+
+.input-group-text { background: transparent; border: 0; color: #6b7280; }
+
+/* minor polish for table zebra and borders */
+.table.dataTable tbody tr:nth-child(odd) { background: rgba(250,250,255,0.6); }
+
+/* 🔧 Filter category custom styling */
+#filter-category {
+    min-width: 200px;
+    max-width: 320px;
+    padding: .45rem .85rem;
+    border-radius: 10px;
+    border: 1px solid #e6e6f0;
+    background: linear-gradient(180deg,#ffffff,#fbfbff);
+    box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+    color: #374151;
+    font-weight: 500;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #6b7280 50%), linear-gradient(135deg, #6b7280 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px);
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    transition: all .12s ease;
+}
+
+#filter-category:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 8px 24px rgba(99,102,241,0.08);
+    transform: translateY(-1px);
+}
+
+/* small polish so it aligns nicely with the search input */
+.d-flex .input-group + div { display:flex; align-items:center; }
+
+@media (max-width: 768px) {
+    #filter-category { width: 100%; max-width: none; margin-top: .5rem; }
+    .d-flex .input-group { width: 100%; }
+    .d-flex { flex-direction: column; align-items: stretch; gap: .5rem; }
+}

@@ -12,6 +12,9 @@ return [
     'products_create_button' => 'Create Product',
     'products_update_button' => 'Update Product',
     'products_details' => 'Details',
+    'section_pricing_tax' => 'Pricing & Tax',
+    'section_units_packaging' => 'Units & Packaging',
+    'section_inventory_alerts' => 'Inventory & Alerts',
 
     'categories_title' => 'Product Categories',
     'categories_breadcrumb' => 'Categories',
@@ -50,6 +53,10 @@ return [
     'wholesale_quantity_placeholder' => 'e.g. 10',
     'wholesale_price' => 'Wholesale Price',
     'wholesale_price_placeholder' => 'Leave empty if not used',
+    'wholesale_stock' => 'Wholesale Stock',
+    'retail_stock' => 'Retail Stock (Loose Units)',
+    'retail_unit' => 'Retail Unit',
+    'retail_price' => 'Retail Price',
 
     'select_category' => 'Select Category',
     'select_symbology' => 'Select Symbology',

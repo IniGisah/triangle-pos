@@ -2,6 +2,7 @@
 
 namespace Modules\Product\DataTables;
 
+use App\Services\ProductInventoryService;
 use Modules\Product\Entities\Product;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -30,14 +31,23 @@ class ProductDataTable extends DataTable
                 return format_currency($data->product_cost);
             })
             ->addColumn('product_quantity', function ($data) {
-                return $data->product_quantity . ' ' . $data->product_unit;
+                $inventoryService = new ProductInventoryService();
+                $breakdown = $inventoryService->getStockBreakdown($data);
+                return $breakdown['formatted'];
             })
             ->rawColumns(['product_image']);
     }
 
     public function query(Product $model)
     {
-        return $model->newQuery()->with('category');
+        $query = $model->newQuery()->with('category');
+
+        if ($category = request('category')) {
+            // filter by category_id when provided (server-side)
+            $query->where('category_id', $category);
+        }
+
+        return $query;
     }
 
     public function html()

@@ -29,7 +29,7 @@ class StoreProductRequest extends FormRequest
             'category_id' => ['required', 'integer'],
             'wholesale_unit' => ['nullable', 'string', 'max:255'],
             'wholesale_quantity' => ['nullable', 'integer', 'min:1', 'required_with:wholesale_unit,wholesale_price'],
-            'wholesale_price' => ['nullable', 'numeric', 'max:2147483647', 'required_with:wholesale_unit,wholesale_quantity']
+            // 'wholesale_price' => ['nullable', 'numeric', 'max:2147483647', 'required_with:wholesale_unit,wholesale_quantity']
         ];
     }
 
