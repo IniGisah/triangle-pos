@@ -34,14 +34,22 @@ class UsersController extends Controller
         $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|max:255|confirmed'
+            'password' => 'required|string|min:8|max:255|confirmed',
+            'jabatan' => 'nullable|string|max:255',
+            'no_handphone' => 'nullable|string|max:50',
+            'no_ktp' => 'nullable|string|max:50',
+            'lokasi_kerja' => 'nullable|string|max:255'
         ]);
 
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
-            'is_active' => $request->is_active
+            'is_active' => $request->is_active,
+            'jabatan' => $request->jabatan,
+            'no_handphone' => $request->no_handphone,
+            'no_ktp' => $request->no_ktp,
+            'lokasi_kerja' => $request->lokasi_kerja
         ]);
 
         $user->assignRole($request->role);
@@ -76,12 +84,20 @@ class UsersController extends Controller
         $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|max:255|unique:users,email,'.$user->id,
+            'jabatan' => 'nullable|string|max:255',
+            'no_handphone' => 'nullable|string|max:50',
+            'no_ktp' => 'nullable|string|max:50',
+            'lokasi_kerja' => 'nullable|string|max:255'
         ]);
 
         $user->update([
             'name'     => $request->name,
             'email'    => $request->email,
-            'is_active' => $request->is_active
+            'is_active' => $request->is_active,
+            'jabatan' => $request->jabatan,
+            'no_handphone' => $request->no_handphone,
+            'no_ktp' => $request->no_ktp,
+            'lokasi_kerja' => $request->lokasi_kerja
         ]);
 
         $user->syncRoles($request->role);

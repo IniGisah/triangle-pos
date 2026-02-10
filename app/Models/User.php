@@ -26,7 +26,11 @@ class User extends Authenticatable implements HasMedia
         'email',
         'password',
         'is_active',
-        'locale'
+        'locale',
+        'jabatan',
+        'no_handphone',
+        'no_ktp',
+        'lokasi_kerja'
     ];
 
     /**

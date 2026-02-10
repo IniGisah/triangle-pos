@@ -21,12 +21,20 @@ class ProfileController extends Controller
     public function update(Request $request) {
         $request->validate([
             'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . auth()->id()
+            'email' => 'required|email|unique:users,email,' . auth()->id(),
+            'jabatan' => 'nullable|string|max:255',
+            'no_handphone' => 'nullable|string|max:50',
+            'no_ktp' => 'nullable|string|max:50',
+            'lokasi_kerja' => 'nullable|string|max:255'
         ]);
 
         auth()->user()->update([
             'name'  => $request->name,
-            'email' => $request->email
+            'email' => $request->email,
+            'jabatan' => $request->jabatan,
+            'no_handphone' => $request->no_handphone,
+            'no_ktp' => $request->no_ktp,
+            'lokasi_kerja' => $request->lokasi_kerja
         ]);
 
         if ($request->has('image')) {

@@ -47,6 +47,34 @@
                             <div class="form-row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
+                                        <label for="jabatan">Jabatan</label>
+                                        <input class="form-control" type="text" name="jabatan">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="no_handphone">No Handphone</label>
+                                        <input class="form-control" type="text" name="no_handphone">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="no_ktp">No KTP</label>
+                                        <input class="form-control" type="text" name="no_ktp">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="lokasi_kerja">Lokasi Kerja</label>
+                                        <input class="form-control" type="text" name="lokasi_kerja">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
                                         <label for="password">Password <span class="text-danger">*</span></label>
                                         <input class="form-control" type="password" name="password" required>
                                     </div>

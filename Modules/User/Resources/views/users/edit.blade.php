@@ -45,6 +45,34 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="jabatan">Jabatan</label>
+                                        <input class="form-control" type="text" name="jabatan" value="{{ $user->jabatan }}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="no_handphone">No Handphone</label>
+                                        <input class="form-control" type="text" name="no_handphone" value="{{ $user->no_handphone }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="no_ktp">No KTP</label>
+                                        <input class="form-control" type="text" name="no_ktp" value="{{ $user->no_ktp }}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="lokasi_kerja">Lokasi Kerja</label>
+                                        <input class="form-control" type="text" name="lokasi_kerja" value="{{ $user->lokasi_kerja }}">
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <label for="role">Role <span class="text-danger">*</span></label>

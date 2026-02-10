@@ -41,74 +41,84 @@
 
         <style>
             /* Limit main product image height for better layout */
-            .product-main-image { width: 100%; height: 360px; object-fit: contain; }
-            @media (max-width: 576px) { .product-main-image { height: 220px; } }
+            .product-main-image { width: 100%; height: 280px; object-fit: contain; }
+            @media (max-width: 576px) { .product-main-image { height: 180px; } }
         </style>
 
-        <!-- Main single-column stacked content -->
+        <!-- Main: image left, details right -->
         <div class="card mb-4">
             <div class="card-body">
-                @php $images = $product->getMedia('images'); @endphp
-                @if($images->count() > 1)
-                    <div id="productCarousel" class="carousel slide mb-3" data-ride="carousel">
-                        <div class="carousel-inner">
-                            @foreach($images as $idx => $media)
-                                <div class="carousel-item {{ $idx == 0 ? 'active' : '' }}">
-                                    <img src="{{ $media->getUrl() }}" class="d-block w-100 product-main-image" alt="Image {{ $idx + 1 }}">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="product-image-card p-2 border rounded shadow-sm text-center">
+                            @php $images = $product->getMedia('images'); @endphp
+                            @if($images->count() > 1)
+                                <div id="productCarousel" class="carousel slide mb-2" data-ride="carousel">
+                                    <div class="carousel-inner">
+                                        @foreach($images as $idx => $media)
+                                            <div class="carousel-item {{ $idx == 0 ? 'active' : '' }}">
+                                                <img src="{{ $media->getUrl() }}" class="d-block w-100 product-main-image" alt="Image {{ $idx + 1 }}">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#productCarousel" role="button" data-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
                                 </div>
-                            @endforeach
-                        </div>
-                        <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#productCarousel" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                @elseif($images->count() == 1)
-                    <img src="{{ $images->first()->getUrl() }}" class="img-fluid mb-3 product-main-image" alt="Product Image">
-                @else
-                            <img src="{{ $product->getFirstMediaUrl('images') }}" class="img-fluid mb-3 product-main-image" alt="Product Image">
+                            @elseif($images->count() == 1)
+                                <img src="{{ $images->first()->getUrl() }}" class="img-fluid mb-2 product-main-image" alt="Product Image">
+                            @else
+                                <img src="{{ $product->getFirstMediaUrl('images') }}" class="img-fluid mb-2 product-main-image" alt="Product Image">
+                            @endif
 
-                <div class="mb-3 d-flex align-items-center">
-                    <div class="mr-3">{!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG($product->product_code, $product->product_barcode_symbology, 1.8, 80) !!}</div>
-                    <div class="text-muted small">{{ $product->product_barcode_symbology }}</div>
-                </div>
-
-                <h5 class="text-uppercase text-muted">{{ __('product::product.products_details') }}</h5>
-                <div class="row mb-3">
-                    <div class="col-12 col-md-6">
-                        <p class="mb-1"><strong>{{ __('product::product.code') }}:</strong> {{ $product->product_code }}</p>
-                        <p class="mb-1"><strong>{{ __('product::product.category') }}:</strong> {{ $product->category->category_name }}</p>
-                        <p class="mb-1"><strong>{{ __('product::product.unit') }}:</strong> {{ $product->product_unit ?? 'N/A' }}</p>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <p class="mb-1"><strong>{{ __('product::product.wholesale_quantity') }}:</strong> @if($wholesaleQuantity > 0) {{ $wholesaleQuantity }} {{ $retailUnit }} per {{ $product->product_unit }} @else N/A @endif</p>
-                        <p class="mb-1"><strong>{{ __('product::product.retail_stock') }}:</strong> {{ $retailStock }}</p>
-                        <p class="mb-1"><strong>{{ __('product::product.alert_quantity') }}:</strong> {{ $product->product_stock_alert }}</p>
-                    </div>
-                </div>
-
-                <h5 class="text-uppercase text-muted">{{ __('product::product.section_pricing_tax') }}</h5>
-                <div class="row mb-3">
-                    <div class="col-12 col-md-6 mb-2">
-                        <div class="p-3 border rounded">
-                            <div class="text-muted small">{{ __('product::product.cost') }}</div>
-                            <div class="h5 mb-0">{{ format_currency($product->product_cost) }}</div>
+                            <div class="mt-2">{!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG($product->product_code, $product->product_barcode_symbology, 1.6, 70) !!}</div>
+                            <div class="text-muted small">{{ $product->product_barcode_symbology }}</div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 mb-2">
-                        <div class="p-3 border rounded">
-                            <div class="text-muted small">{{ __('product::product.price') }}</div>
-                            <div class="h5 text-success mb-0">{{ format_currency($product->product_price) }}</div>
+
+                    <div class="col-md-6">
+                        <h5 class="text-uppercase text-muted">{{ __('product::product.products_details') }}</h5>
+                        <dl class="row mb-3">
+                            <dt class="col-sm-5 text-muted">{{ __('product::product.code') }}</dt>
+                            <dd class="col-sm-7">{{ $product->product_code }}</dd>
+
+                            <dt class="col-sm-5 text-muted">{{ __('product::product.category') }}</dt>
+                            <dd class="col-sm-7">{{ $product->category->category_name }}</dd>
+
+                            <dt class="col-sm-5 text-muted">{{ __('product::product.unit') }}</dt>
+                            <dd class="col-sm-7">{{ $product->product_unit ?? 'N/A' }}</dd>
+
+                            <dt class="col-sm-5 text-muted">{{ __('product::product.wholesale_quantity') }}</dt>
+                            <dd class="col-sm-7">@if($wholesaleQuantity > 0) {{ $wholesaleQuantity }} {{ $retailUnit }} per {{ $product->product_unit }} @else N/A @endif</dd>
+
+                            <dt class="col-sm-5 text-muted">{{ __('product::product.retail_stock') }}</dt>
+                            <dd class="col-sm-7">{{ $retailStock }}</dd>
+
+                            <dt class="col-sm-5 text-muted">{{ __('product::product.alert_quantity') }}</dt>
+                            <dd class="col-sm-7">{{ $product->product_stock_alert }}</dd>
+                        </dl>
+
+                        <h5 class="text-uppercase text-muted">{{ __('product::product.section_pricing_tax') }}</h5>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center py-2">
+                                <div class="text-muted small">{{ __('product::product.cost') }}</div>
+                                <div><strong>{{ format_currency($product->product_cost) }}</strong></div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center py-2">
+                                <div class="text-muted small">{{ __('product::product.price') }}</div>
+                                <div><strong class="text-success">{{ format_currency($product->product_price) }}</strong></div>
+                            </div>
                         </div>
+
+                        <h5 class="text-uppercase text-muted">{{ __('product::product.note') }}</h5>
+                        <p class="mb-0">{{ $product->product_note ?? 'N/A' }}</p>
                     </div>
                 </div>
-
-                <h5 class="text-uppercase text-muted">{{ __('product::product.note') }}</h5>
-                <p class="mb-0">{{ $product->product_note ?? 'N/A' }}</p>
             </div>
         </div>
 
@@ -125,7 +135,7 @@
         @endif
 
         <!-- Thumbnails strip -->
-        <div class="card mb-4">
+        {{-- <div class="card mb-4">
             <div class="card-body">
                 <h6 class="text-uppercase text-muted mb-3">{{ __('product::product.product_images') }}</h6>
                 <div class="d-flex flex-wrap">
@@ -136,7 +146,7 @@
                     @endforelse
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Delete Confirmation Modal -->
         <div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductModalLabel" aria-hidden="true">

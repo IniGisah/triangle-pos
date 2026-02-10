@@ -49,6 +49,34 @@
                                 @enderror
                             </div>
                             <div class="form-group">
+                                <label for="jabatan">{{ __('user::user.jabatan') }}</label>
+                                <input class="form-control" type="text" name="jabatan" value="{{ auth()->user()->jabatan }}">
+                                @error('jabatan')
+                                <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="no_handphone">{{ __('user::user.no_handphone') }}</label>
+                                <input class="form-control" type="text" name="no_handphone" value="{{ auth()->user()->no_handphone }}">
+                                @error('no_handphone')
+                                <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="no_ktp">{{ __('user::user.no_ktp') }}</label>
+                                <input class="form-control" type="text" name="no_ktp" value="{{ auth()->user()->no_ktp }}">
+                                @error('no_ktp')
+                                <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="lokasi_kerja">{{ __('user::user.lokasi_kerja') }}</label>
+                                <input class="form-control" type="text" name="lokasi_kerja" value="{{ auth()->user()->lokasi_kerja }}">
+                                @error('lokasi_kerja')
+                                <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="form-group">
                                 <button type="submit" class="btn btn-primary">{{ __('user::user.update_profile') }} <i class="bi bi-check"></i></button>
                             </div>
                         </form>
