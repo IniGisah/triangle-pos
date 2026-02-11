@@ -60,9 +60,6 @@ This will start the application along with the mysql database using docker compo
 - **System Settings**
 - **Reports**
 - **English and Indonesian Language with switcher**
-
-## TODO
-
 - **Wholesale and retail products**
 - **Employee data based on user**
 
