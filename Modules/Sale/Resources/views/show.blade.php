@@ -48,6 +48,7 @@
                                 <h5 class="mb-2 border-bottom pb-2">{{ __('sale::sale.invoice_info') }}</h5>
                                 <div>{{ __('sale::sale.invoice') }}: <strong>{{ __('sale::sale.invoice_prefix') }}{{ $sale->reference }}</strong></div>
                                 <div>{{ __('sale::sale.date') }}: {{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}</div>
+                                <div>{{ __('sale::sale.sale_by') }}: {{ $sale->user ? $sale->user->name : '-' }}</div>
                                 <div>
                                     {{ __('sale::sale.status') }}: <strong>{{ __('sale::sale.status_badge_' . strtolower($sale->status)) }}</strong>
                                 </div>

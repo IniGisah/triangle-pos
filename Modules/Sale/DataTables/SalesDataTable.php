@@ -30,13 +30,16 @@ class SalesDataTable extends DataTable
             ->addColumn('payment_status', function ($data) {
                 return view('sale::partials.payment-status', compact('data'));
             })
+            ->addColumn('sale_by', function ($data) {
+                return $data->user ? $data->user->name : '-';
+            })
             ->addColumn('action', function ($data) {
                 return view('sale::partials.actions', compact('data'));
             });
     }
 
     public function query(Sale $model) {
-        return $model->newQuery();
+        return $model->newQuery()->with('user');
     }
 
     public function html() {
@@ -47,7 +50,7 @@ class SalesDataTable extends DataTable
             ->dom("<'row'<'col-md-3'l><'col-md-5 mb-2'B><'col-md-4'f>> .
                                 'tr' .
                                 <'row'<'col-md-5'i><'col-md-7 mt-2'p>>")
-            ->orderBy(8)
+            ->orderBy(9)
             ->buttons(
                 Button::make('excel')
                     ->text(__('sale::sale.excel')),
@@ -88,6 +91,10 @@ class SalesDataTable extends DataTable
 
             Column::computed('payment_status')
                 ->title(__('sale::sale.payment_status'))
+                ->className('text-center align-middle'),
+
+            Column::computed('sale_by')
+                ->title(__('sale::sale.sale_by'))
                 ->className('text-center align-middle'),
 
             Column::computed('action')

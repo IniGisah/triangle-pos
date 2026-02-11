@@ -9,7 +9,7 @@ class LanguageController extends Controller
 {
     public function switch(Request $request): RedirectResponse
     {
-        $supported = config('app.supported_locales', ['en']);
+        $supported = config('app.supported_locales', ['id','en']);
 
         $validated = $request->validate([
             'locale' => ['required', 'in:' . implode(',', $supported)],

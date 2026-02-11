@@ -48,6 +48,7 @@ return [
     'status' => 'Status',
     'payment_status' => 'Payment Status',
     'payment_method' => 'Payment Method',
+    'sale_by' => 'Sale By',
     'paid_amount' => 'Amount Received',
     'due_amount' => 'Due Amount',
     'amount' => 'Amount',

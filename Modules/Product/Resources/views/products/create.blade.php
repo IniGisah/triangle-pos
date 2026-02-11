@@ -129,7 +129,7 @@
                                 <div class="form-row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="product_unit">{{ __('product::product.unit') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="This short text will be placed after Product Quantity."></i> <span class="text-danger">*</span></label>
+                                            <label for="product_unit">{{ __('product::product.unit') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="{{ __('product::product.unit_help') }}"></i> <span class="text-danger">*</span></label>
                                             <select class="form-control" name="product_unit" id="product_unit" required>
                                                 <option value="" selected>{{ __('product::product.select_unit') }}</option>
                                                 @foreach(\Modules\Setting\Entities\Unit::all() as $unit)
@@ -148,7 +148,7 @@
                                 <div class="form-row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="retail_unit">{{ __('product::product.retail_unit') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="Unit for retail stock."></i></label>
+                                            <label for="retail_unit">{{ __('product::product.retail_unit') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="{{ __('product::product.retail_unit_help') }}"></i></label>
                                             <select class="form-control" name="retail_unit" id="retail_unit">
                                                 <option value="" selected>{{ __('product::product.select_unit') }}</option>
                                                 @foreach(\Modules\Setting\Entities\Unit::all() as $unit)
@@ -174,14 +174,14 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="wholesale_unit_stock">{{ __('product::product.wholesale_stock') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="Number of wholesale units in stock (e.g., boxes, cartons)"></i></label>
-                                            <input type="number" class="form-control" name="wholesale_unit_stock" id="wholesale_unit_stock" value="{{ old('wholesale_unit_stock', 0) }}" min="0" placeholder="Number of boxes/cartons">
+                                            <label for="wholesale_unit_stock">{{ __('product::product.wholesale_stock') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="{{ __('product::product.wholesale_stock_help') }}"></i></label>
+                                            <input type="number" class="form-control" name="wholesale_unit_stock" id="wholesale_unit_stock" value="{{ old('wholesale_unit_stock', 0) }}" min="0" placeholder="{{ __('product::product.wholesale_stock_placeholder') }}">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="retail_unit_stock">{{ __('product::product.retail_stock') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="Number of loose retail units in stock (e.g., pieces)"></i></label>
-                                            <input type="number" class="form-control" name="retail_unit_stock" id="retail_unit_stock" value="{{ old('retail_unit_stock', 0) }}" min="0" placeholder="Number of loose pieces">
+                                            <label for="retail_unit_stock">{{ __('product::product.retail_stock') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="{{ __('product::product.retail_stock_help') }}"></i></label>
+                                            <input type="number" class="form-control" name="retail_unit_stock" id="retail_unit_stock" value="{{ old('retail_unit_stock', 0) }}" min="0" placeholder="{{ __('product::product.retail_stock_placeholder') }}">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -194,7 +194,7 @@
                                 <div class="form-row">
                                     <div class="col-md-12">
                                         <div class="alert alert-info" id="stock_total_display" style="display: none;">
-                                            <strong>Total Stock:</strong> <span id="stock_total_text">0</span>
+                                            <strong>{{ __('product::product.total_stock') }}:</strong> <span id="stock_total_text">0</span>
                                         </div>
                                     </div>
                                 </div>
@@ -216,7 +216,7 @@
                                     <h6 class="text-uppercase text-muted mb-0">{{ __('product::product.product_images') }}</h6>
                                 </div>
                                 <div class="form-group mb-0">
-                                    <label for="image">{{ __('product::product.product_images') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="Max Files: 3, Max File Size: 1MB, Image Size: 400x400"></i></label>
+                                    <label for="image">{{ __('product::product.product_images') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="{{ __('product::product.images_help') }}"></i></label>
                                     <div class="dropzone d-flex flex-wrap align-items-center justify-content-center p-4 border rounded" id="document-dropzone">
                                         <div class="dz-message" data-dz-message>
                                             <i class="bi bi-cloud-arrow-up"></i>
@@ -332,13 +332,16 @@
             $('#retail_price').maskMoney('mask');
 
             // Calculate and display total stock across wholesale and retail breakdowns
+            var defaultWholesaleUnit = "{{ __('product::product.unit_boxes') }}";
+            var defaultRetailUnit = "{{ __('product::product.unit_pcs') }}";
+
             function updateStockTotal() {
                 var wholesaleStock = parseInt($('#wholesale_unit_stock').val()) || 0;
                 var retailStock = parseInt($('#retail_unit_stock').val()) || 0;
                 var wholesaleQty = parseInt($('#wholesale_quantity').val()) || 0;
                 var manualQty = parseInt($('#product_quantity').val()) || 0;
-                var wholesaleUnit = $('#product_unit option:selected').text().split('|')[0].trim() || 'boxes';
-                var retailUnit = $('#retail_unit option:selected').text().split('|')[0].trim() || $('#product_unit option:selected').text().split('|')[0].trim() || 'pcs';
+                var wholesaleUnit = $('#product_unit option:selected').text().split('|')[0].trim() || defaultWholesaleUnit;
+                var retailUnit = $('#retail_unit option:selected').text().split('|')[0].trim() || $('#product_unit option:selected').text().split('|')[0].trim() || defaultRetailUnit;
 
                 if (wholesaleQty === 0) {
                     $('#wholesale_quantity').val(0);

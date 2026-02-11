@@ -67,7 +67,8 @@
         <p>
             {{ __('sale::sale.date') }}: {{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}<br>
             {{ __('sale::sale.reference') }}: {{ $sale->reference }}<br>
-            {{ __('sale::sale.name') }}: {{ $sale->customer_name }}
+            {{ __('sale::sale.name') }}: {{ $sale->customer_name }}<br>
+            {{ __('sale::sale.sale_by') }}: {{ $sale->user ? $sale->user->name : '-' }}
         </p>
         <table class="table-data">
             <tbody>

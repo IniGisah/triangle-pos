@@ -9,7 +9,7 @@ class SetLocale
 {
     public function handle(Request $request, Closure $next)
     {
-        $supportedLocales = config('app.supported_locales', ['en']);
+        $supportedLocales = config('app.supported_locales', ['id', 'en']);
         $supportedLocales = array_map('strtolower', $supportedLocales);
 
         $sessionLocale = $request->session()->get('app_locale');

@@ -43,4 +43,23 @@ class SearchProduct extends Component
     public function selectProduct($product) {
         $this->dispatch('productSelected', $product);
     }
+
+    public function searchByBarcode($rawQuery = null) {
+        $query = trim((string) ($rawQuery ?? $this->query));
+
+        if ($query === '') {
+            return;
+        }
+
+        $product = Product::where('product_code', $query)->first();
+
+        if (!$product && $this->search_results instanceof Collection && $this->search_results->count() === 1) {
+            $product = $this->search_results->first();
+        }
+
+        if ($product) {
+            $this->dispatch('productSelected', $product);
+            $this->resetQuery();
+        }
+    }
 }

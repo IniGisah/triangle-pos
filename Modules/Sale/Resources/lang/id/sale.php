@@ -48,6 +48,7 @@ return [
     'status' => 'Status',
     'payment_status' => 'Status Pembayaran',
     'payment_method' => 'Metode Pembayaran',
+    'sale_by' => 'Kasir',
     'paid_amount' => 'Jumlah Diterima',
     'due_amount' => 'Jumlah Terutang',
     'amount' => 'Jumlah',

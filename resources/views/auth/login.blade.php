@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ App::getLocale() }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -61,14 +61,14 @@
             </div>
         @endif
 
-        <h4 class="form-heading">Welcome back</h4>
-        <p class="form-sub">Sign in to continue to {{ config('app.name') }}</p>
+        <h4 class="form-heading">{{ __('auth.login') }}</h4>
+        <p class="form-sub">{{ __('auth.sign_in_to_continue_to') }} {{ config('app.name') }}</p>
 
         <form id="login" method="post" action="{{ url('/login') }}">
             @csrf
 
             <div class="mb-3">
-                <label for="email" class="form-label visually-hidden">Email</label>
+                <label for="email" class="form-label visually-hidden">{{ __('auth.email') }}</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="bi bi-envelope"></i></span>
@@ -96,10 +96,10 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                    <label class="form-check-label" for="remember">Remember me</label>
+                    <label class="form-check-label" for="remember">{{ __('auth.remember_me') }}</label>
                 </div>
                 <div>
-                    <a class="text-decoration-none text-light" href="{{ route('password.request') }}">Forgot password?</a>
+                    <a class="text-decoration-none text-light" href="{{ route('password.request') }}">{{ __('auth.forgot_your_password') }}</a>
                 </div>
             </div>
 

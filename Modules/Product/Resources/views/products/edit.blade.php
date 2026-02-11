@@ -18,179 +18,215 @@
             <div class="row">
                 <div class="col-lg-12">
                     @include('utils.alerts')
-                    <div class="form-group">
-                        <button class="btn btn-primary">{{ __('product::product.products_update_button') }} <i class="bi bi-check"></i></button>
-                    </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="card">
+                    <div class="card shadow-sm mb-4">
                         <div class="card-body">
-                            <div class="form-row">
-                                <div class="col-md-7">
-                                    <div class="form-group">
-                                        <label for="product_name">{{ __('product::product.name') }} <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="product_name" required value="{{ $product->product_name }}">
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="badge badge-primary rounded-pill mr-2">1</span>
+                                    <h6 class="text-uppercase text-muted mb-0">{{ __('product::product.products_details') }}</h6>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-7">
+                                        <div class="form-group">
+                                            <label for="product_name">{{ __('product::product.name') }} <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="product_name" required value="{{ $product->product_name }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="product_code">{{ __('product::product.code') }} <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="product_code" required value="{{ $product->product_code }}">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <label for="product_code">{{ __('product::product.code') }} <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="product_code" required value="{{ $product->product_code }}">
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
+                                <div class="form-row">
+                                    <div class="col-md-6">
                                         <label for="category_id">{{ __('product::product.category') }} <span class="text-danger">*</span></label>
-                                        <select class="form-control" name="category_id" id="category_id" required>
-                                            @foreach(\Modules\Product\Entities\Category::all() as $category)
-                                                <option {{ $category->id == $product->category->id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->category_name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div class="input-group">
+                                            <select class="form-control" name="category_id" id="category_id" required>
+                                                <option value="" disabled>{{ __('product::product.select_category') }}</option>
+                                                @foreach(\Modules\Product\Entities\Category::all() as $category)
+                                                    <option {{ $category->id == $product->category->id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <div class="input-group-append d-flex">
+                                                <button data-toggle="modal" data-target="#categoryCreateModal" class="btn btn-outline-primary" type="button">
+                                                    {{ __('product::product.add') }}
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="barcode_symbology">{{ __('product::product.barcode_symbology') }} <span class="text-danger">*</span></label>
-                                        <select class="form-control" name="product_barcode_symbology" id="barcode_symbology" required>
-                                            <option {{ $product->product_barcode_symbology == 'C128' ? 'selected' : '' }} value="C128">Code 128</option>
-                                            <option {{ $product->product_barcode_symbology == 'C39' ? 'selected' : '' }} value="C39">Code 39</option>
-                                            <option {{ $product->product_barcode_symbology == 'UPCA' ? 'selected' : '' }} value="UPCA">UPC-A</option>
-                                            <option {{ $product->product_barcode_symbology == 'UPCE' ? 'selected' : '' }} value="UPCE">UPC-E</option>
-                                            <option {{ $product->product_barcode_symbology == 'EAN13' ? 'selected' : '' }} value="EAN13">EAN-13</option>
-                                            <option {{ $product->product_barcode_symbology == 'EAN8' ? 'selected' : '' }} value="EAN8">EAN-8</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="product_cost">{{ __('product::product.cost') }} <span class="text-danger">*</span></label>
-                                        <input id="product_cost" type="text" class="form-control" min="0" name="product_cost" required value="{{ $product->product_cost }}">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="product_price">{{ __('product::product.price') }} <span class="text-danger">*</span></label>
-                                        <input id="product_price" type="text" class="form-control" min="0" name="product_price" required value="{{ $product->product_price }}">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="barcode_symbology">{{ __('product::product.barcode_symbology') }} <span class="text-danger">*</span></label>
+                                            <select class="form-control" name="product_barcode_symbology" id="barcode_symbology" required>
+                                                <option value="" disabled>{{ __('product::product.select_symbology') }}</option>
+                                                <option {{ $product->product_barcode_symbology == 'C128' ? 'selected' : '' }} value="C128">Code 128</option>
+                                                <option {{ $product->product_barcode_symbology == 'C39' ? 'selected' : '' }} value="C39">Code 39</option>
+                                                <option {{ $product->product_barcode_symbology == 'UPCA' ? 'selected' : '' }} value="UPCA">UPC-A</option>
+                                                <option {{ $product->product_barcode_symbology == 'UPCE' ? 'selected' : '' }} value="UPCE">UPC-E</option>
+                                                <option {{ $product->product_barcode_symbology == 'EAN13' ? 'selected' : '' }} value="EAN13">EAN-13</option>
+                                                <option {{ $product->product_barcode_symbology == 'EAN8' ? 'selected' : '' }} value="EAN8">EAN-8</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="product_quantity">{{ __('product::product.quantity') }} <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" name="product_quantity" required value="{{ $product->product_quantity }}" min="1">
+                            <div class="mb-4 border-top pt-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="badge badge-primary rounded-pill mr-2">2</span>
+                                    <h6 class="text-uppercase text-muted mb-0">{{ __('product::product.section_pricing_tax') }}</h6>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="product_cost">{{ __('product::product.cost') }} <span class="text-danger">*</span></label>
+                                            <input id="product_cost" type="text" class="form-control" name="product_cost" required value="{{ $product->product_cost }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="product_price">{{ __('product::product.price') }} <span class="text-danger">*</span></label>
+                                            <input id="product_price" type="text" class="form-control" name="product_price" required value="{{ $product->product_price }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="retail_price">{{ __('product::product.retail_price') }}</label>
+                                            <input id="retail_price" type="text" class="form-control" name="retail_price" value="{{ $product->retail_price }}">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="product_stock_alert">{{ __('product::product.alert_quantity') }} <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" name="product_stock_alert" required value="{{ $product->product_stock_alert }}" min="0">
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="product_order_tax">{{ __('product::product.tax_percentage') }}</label>
+                                            <input type="number" class="form-control" name="product_order_tax" value="{{ $product->product_order_tax }}" min="0" max="100">
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="product_order_tax">{{ __('product::product.tax_percentage') }}</label>
-                                        <input type="number" class="form-control" name="product_order_tax" value="{{ $product->product_order_tax }}" min="0" max="100">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="product_tax_type">{{ __('product::product.tax_type') }}</label>
-                                        <select class="form-control" name="product_tax_type" id="product_tax_type">
-                                            <option value="" selected>{{ __('product::product.tax_type_none') }}</option>
-                                            <option {{ $product->product_tax_type == 1 ? 'selected' : '' }}  value="1">{{ __('product::product.tax_type_exclusive') }}</option>
-                                            <option {{ $product->product_tax_type == 2 ? 'selected' : '' }} value="2">{{ __('product::product.tax_type_inclusive') }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="product_unit">{{ __('product::product.unit') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="This short text will be placed after Product Quantity."></i> <span class="text-danger">*</span></label>
-                                        <select class="form-control" name="product_unit" id="product_unit" required>
-                                            <option value="" selected>{{ __('product::product.select_unit') }}</option>
-                                            @foreach(\Modules\Setting\Entities\Unit::all() as $unit)
-                                                <option {{ $product->product_unit == $unit->short_name ? 'selected' : '' }} value="{{ $unit->short_name }}">{{ $unit->name . ' | ' . $unit->short_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="wholesale_unit">{{ __('product::product.wholesale_unit') }}</label>
-                                        <select class="form-control" name="wholesale_unit" id="wholesale_unit">
-                                            <option value="" selected>{{ __('product::product.select_unit') }}</option>
-                                            @foreach(\Modules\Setting\Entities\Unit::all() as $unit)
-                                                <option {{ $product->wholesale_unit == $unit->short_name ? 'selected' : '' }} value="{{ $unit->short_name }}">{{ $unit->name . ' | ' . $unit->short_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="wholesale_quantity">{{ __('product::product.wholesale_quantity') }}</label>
-                                        <input type="number" class="form-control" name="wholesale_quantity" id="wholesale_quantity" value="{{ $product->wholesale_quantity }}" min="1" placeholder="{{ __('product::product.wholesale_quantity_placeholder') }}">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="wholesale_price">{{ __('product::product.wholesale_price') }}</label>
-                                        <input id="wholesale_price" type="text" class="form-control" min="0" name="wholesale_price" value="{{ $product->wholesale_price }}" placeholder="{{ __('product::product.wholesale_price_placeholder') }}">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="product_tax_type">{{ __('product::product.tax_type') }}</label>
+                                            <select class="form-control" name="product_tax_type" id="product_tax_type">
+                                                <option value="" {{ empty($product->product_tax_type) ? 'selected' : '' }}>{{ __('product::product.select_tax_type') }}</option>
+                                                <option {{ $product->product_tax_type == 1 ? 'selected' : '' }} value="1">{{ __('product::product.tax_type_exclusive') }}</option>
+                                                <option {{ $product->product_tax_type == 2 ? 'selected' : '' }} value="2">{{ __('product::product.tax_type_inclusive') }}</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="wholesale_unit_stock">{{ __('product::product.wholesale_stock') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="Number of wholesale units in stock (e.g., boxes, cartons)"></i></label>
-                                        <input type="number" class="form-control" name="wholesale_unit_stock" id="wholesale_unit_stock" value="{{ $product->wholesale_unit_stock ?? 0 }}" min="0" placeholder="Number of boxes/cartons">
+                            <div class="mb-4 border-top pt-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="badge badge-primary rounded-pill mr-2">3</span>
+                                    <h6 class="text-uppercase text-muted mb-0">{{ __('product::product.section_units_packaging') }}</h6>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="product_unit">{{ __('product::product.unit') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="{{ __('product::product.unit_help') }}"></i> <span class="text-danger">*</span></label>
+                                            <select class="form-control" name="product_unit" id="product_unit" required>
+                                                <option value="" {{ empty($product->product_unit) ? 'selected' : '' }}>{{ __('product::product.select_unit') }}</option>
+                                                @foreach(\Modules\Setting\Entities\Unit::all() as $unit)
+                                                    <option {{ $product->product_unit == $unit->short_name ? 'selected' : '' }} value="{{ $unit->short_name }}">{{ $unit->name . ' | ' . $unit->short_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="wholesale_quantity">{{ __('product::product.wholesale_quantity') }}</label>
+                                            <input type="number" class="form-control" name="wholesale_quantity" id="wholesale_quantity" value="{{ $product->wholesale_quantity ?? 0 }}" min="0" placeholder="{{ __('product::product.wholesale_quantity_placeholder') }}">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="retail_unit_stock">{{ __('product::product.retail_stock') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="Number of loose retail units in stock (e.g., pieces)"></i></label>
-                                        <input type="number" class="form-control" name="retail_unit_stock" id="retail_unit_stock" value="{{ $product->retail_unit_stock ?? 0 }}" min="0" placeholder="Number of loose pieces">
+                                <div class="form-row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="retail_unit">{{ __('product::product.retail_unit') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="{{ __('product::product.retail_unit_help') }}"></i></label>
+                                            <select class="form-control" name="retail_unit" id="retail_unit">
+                                                <option value="" {{ empty($product->retail_unit) ? 'selected' : '' }}>{{ __('product::product.select_unit') }}</option>
+                                                @foreach(\Modules\Setting\Entities\Unit::all() as $unit)
+                                                    <option {{ $product->retail_unit == $unit->short_name ? 'selected' : '' }} value="{{ $unit->short_name }}">{{ $unit->name . ' | ' . $unit->short_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-row">
-                                <div class="col-md-12">
-                                    <div class="alert alert-info" id="stock_total_display">
-                                        <strong>Total Stock:</strong> <span id="stock_total_text">0</span>
+                            <div class="mb-4 border-top pt-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="badge badge-primary rounded-pill mr-2">4</span>
+                                    <h6 class="text-uppercase text-muted mb-0">{{ __('product::product.section_inventory_alerts') }}</h6>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="product_quantity">{{ __('product::product.quantity') }} <span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" name="product_quantity" id="product_quantity" required value="{{ $product->product_quantity }}" min="1">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="wholesale_unit_stock">{{ __('product::product.wholesale_stock') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="{{ __('product::product.wholesale_stock_help') }}"></i></label>
+                                            <input type="number" class="form-control" name="wholesale_unit_stock" id="wholesale_unit_stock" value="{{ $product->wholesale_unit_stock ?? 0 }}" min="0" placeholder="{{ __('product::product.wholesale_stock_placeholder') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="retail_unit_stock">{{ __('product::product.retail_stock') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="{{ __('product::product.retail_stock_help') }}"></i></label>
+                                            <input type="number" class="form-control" name="retail_unit_stock" id="retail_unit_stock" value="{{ $product->retail_unit_stock ?? 0 }}" min="0" placeholder="{{ __('product::product.retail_stock_placeholder') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="product_stock_alert">{{ __('product::product.alert_quantity') }} <span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" name="product_stock_alert" id="product_stock_alert" required value="{{ $product->product_stock_alert }}" min="0" max="100">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <div class="alert alert-info" id="stock_total_display" style="display: none;">
+                                            <strong>{{ __('product::product.total_stock') }}:</strong> <span id="stock_total_text">0</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="product_note">{{ __('product::product.note') }}</label>
-                                <textarea name="product_note" id="product_note" rows="4 " class="form-control">{{ $product->product_note }}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="image">{{ __('product::product.product_images') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="Max Files: 3, Max File Size: 1MB, Image Size: 400x400"></i></label>
-                                <div class="dropzone d-flex flex-wrap align-items-center justify-content-center" id="document-dropzone">
-                                    <div class="dz-message" data-dz-message>
-                                        <i class="bi bi-cloud-arrow-up"></i>
+                            <div class="border-top pt-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="badge badge-primary rounded-pill mr-2">5</span>
+                                    <h6 class="text-uppercase text-muted mb-0">{{ __('product::product.note') }}</h6>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <textarea name="product_note" id="product_note" rows="4 " class="form-control">{{ $product->product_note }}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="border-top pt-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="badge badge-primary rounded-pill mr-2">6</span>
+                                    <h6 class="text-uppercase text-muted mb-0">{{ __('product::product.product_images') }}</h6>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label for="image">{{ __('product::product.product_images') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip" data-placement="top" title="{{ __('product::product.images_help') }}"></i></label>
+                                    <div class="dropzone d-flex flex-wrap align-items-center justify-content-center p-4 border rounded" id="document-dropzone">
+                                        <div class="dz-message" data-dz-message>
+                                            <i class="bi bi-cloud-arrow-up"></i>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="pt-4 mt-4 text-right">
+                                <button class="btn btn-primary btn-block">{{ __('product::product.products_update_button') }} <i class="bi bi-check"></i></button>
                             </div>
                         </div>
                     </div>
@@ -198,6 +234,9 @@
             </div>
         </form>
     </div>
+
+    <!-- Create Category Modal -->
+    @include('product::includes.category-modal')
 @endsection
 
 @section('third_party_scripts')
@@ -229,6 +268,14 @@
                 } else {
                     name = uploadedDocumentMap[file.name];
                 }
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('dropzone.delete') }}",
+                    data: {
+                        '_token': "{{ csrf_token() }}",
+                        'file_name': `${name}`
+                    },
+                });
                 $('form').find('input[name="document[]"][value="' + name + '"]').remove();
             },
             init: function () {
@@ -259,7 +306,7 @@
                 thousands:'{{ settings()->currency->thousand_separator }}',
                 decimal:'{{ settings()->currency->decimal_separator }}',
             });
-            $('#wholesale_price').maskMoney({
+            $('#retail_price').maskMoney({
                 prefix:'{{ settings()->currency->symbol }}',
                 thousands:'{{ settings()->currency->thousand_separator }}',
                 decimal:'{{ settings()->currency->decimal_separator }}',
@@ -268,47 +315,66 @@
 
             $('#product_cost').maskMoney('mask');
             $('#product_price').maskMoney('mask');
-            $('#wholesale_price').maskMoney('mask');
+            $('#retail_price').maskMoney('mask');
 
-            // Calculate and display total stock
+            // Calculate and display total stock across wholesale and retail breakdowns
+            var defaultWholesaleUnit = "{{ __('product::product.unit_boxes') }}";
+            var defaultRetailUnit = "{{ __('product::product.unit_pcs') }}";
+
             function updateStockTotal() {
                 var wholesaleStock = parseInt($('#wholesale_unit_stock').val()) || 0;
                 var retailStock = parseInt($('#retail_unit_stock').val()) || 0;
                 var wholesaleQty = parseInt($('#wholesale_quantity').val()) || 0;
-                var wholesaleUnit = $('#wholesale_unit option:selected').text().split('|')[0].trim() || 'boxes';
-                var retailUnit = $('#product_unit option:selected').text().split('|')[0].trim() || 'pcs';
+                var manualQty = parseInt($('#product_quantity').val()) || 0;
+                var wholesaleUnit = $('#product_unit option:selected').text().split('|')[0].trim() || defaultWholesaleUnit;
+                var retailUnit = $('#retail_unit option:selected').text().split('|')[0].trim() || $('#product_unit option:selected').text().split('|')[0].trim() || defaultRetailUnit;
 
-                var totalInRetailUnits = (wholesaleStock * wholesaleQty) + retailStock;
-                
-                var displayText = '';
-                if (wholesaleStock > 0 && wholesaleQty > 0) {
-                    displayText = wholesaleStock + ' ' + wholesaleUnit + ' + ' + retailStock + ' ' + retailUnit + ' = ' + totalInRetailUnits + ' ' + retailUnit + ' total';
+                if (wholesaleQty === 0) {
+                    $('#wholesale_quantity').val(0);
+                    $('#wholesale_unit_stock').prop('readonly', true).addClass('bg-light');
+                    $('#retail_unit_stock').prop('readonly', true).addClass('bg-light');
+                    $('#retail_unit').prop('readonly', true).addClass('bg-light');
+                    $('#retail_price').prop('readonly', true).addClass('bg-light');
+                    $('#product_quantity').prop('readonly', false).removeClass('bg-light');
                 } else {
-                    displayText = retailStock + ' ' + retailUnit;
+                    $('#wholesale_unit_stock').prop('readonly', false).removeClass('bg-light');
+                    $('#retail_unit_stock').prop('readonly', false).removeClass('bg-light');
+                    $('#retail_unit').prop('readonly', false).removeClass('bg-light');
+                    $('#retail_price').prop('readonly', false).removeClass('bg-light');
+                    $('#product_quantity').prop('readonly', true).addClass('bg-light');
+                }
+
+                var totalFromBreakdown = (wholesaleStock * wholesaleQty) + retailStock;
+                var total = totalFromBreakdown || manualQty;
+
+                var displayText = total + ' ' + wholesaleUnit;
+                if (totalFromBreakdown > 0 && wholesaleStock > 0 && wholesaleQty > 0) {
+                    displayText = wholesaleStock + ' ' + wholesaleUnit + ' @ ' + wholesaleQty + ' + ' + retailStock + ' ' + retailUnit + ' = ' + total + ' ' + retailUnit;
                 }
 
                 $('#stock_total_text').text(displayText);
-                $('#stock_total_display').show();
+                $('#stock_total_display').toggle(total > 0);
 
-                // Also update the legacy product_quantity field to maintain backward compatibility
-                $('#product_quantity').val(totalInRetailUnits);
+                if (totalFromBreakdown > 0) {
+                    $('#product_quantity').val(total);
+                }
             }
 
-            // Listen to changes in inventory fields
-            $('#wholesale_unit_stock, #retail_unit_stock, #wholesale_quantity, #wholesale_unit, #product_unit').on('change keyup', function() {
+            $('#product_quantity, #retail_unit_stock, #wholesale_unit_stock, #wholesale_quantity, #wholesale_unit, #retail_unit, #product_unit').on('change keyup', function() {
                 updateStockTotal();
             });
 
-            // Initialize on page load
             updateStockTotal();
 
             $('#product-form').submit(function () {
                 var product_cost = $('#product_cost').maskMoney('unmasked')[0];
                 var product_price = $('#product_price').maskMoney('unmasked')[0];
-                var wholesale_price = $('#wholesale_price').maskMoney('unmasked')[0];
+                var retail_price = $('#retail_price').maskMoney('unmasked')[0] || 0;
                 $('#product_cost').val(product_cost);
                 $('#product_price').val(product_price);
-                $('#wholesale_price').val(wholesale_price);
+                $('#retail_price').val(retail_price);
+
+                updateStockTotal();
             });
         });
     </script>
